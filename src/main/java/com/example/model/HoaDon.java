@@ -1,3 +1,6 @@
+package com.example.model;
+
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,9 +19,9 @@ public class HoaDon {
     private Integer maNV;
     private String maKM;
     private Set<ChiTietDV> chiTietDVs;
-    private KhuyenMai khuyenMai;
+    //private KhuyenMai khuyenMai;
     private com.example.model.NhanVien nhanVien;
-    private TaiKhoan taiKhoan;
+    //private TaiKhoan taiKhoan;
 
     public HoaDon() {
         this.chiTietDVs = new HashSet<>();

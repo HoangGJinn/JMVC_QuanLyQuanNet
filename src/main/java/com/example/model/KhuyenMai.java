@@ -21,8 +21,8 @@ public class KhuyenMai {
     private java.util.Date thoiGianBatDau;
     private java.util.Date thoiGianKetThuc;
     private int maLoaiKM;
-    private java.util.List<HoaDon> hOADONs;
-    private LoaiKm lOAIKM;
+    //private java.util.List<HoaDon> hOADONs;
+    //private LoaiKm lOAIKM;
 
 
 }

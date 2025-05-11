@@ -7,10 +7,10 @@ public class TaiKhoan
     public int soDu;
     public String ngayTao;
     public String trangThai;
-    public ArrayList<HoaDon> HoaDons;
-    public ArrayList<ChiTietSuDung> ChiTietSuDungs;
+    //public ArrayList<HoaDon> HoaDons;
+    //public ArrayList<ChiTietSuDung> ChiTietSuDungs;
     public TaiKhoan(){
-        this.HoaDons = new ArrayList<HoaDon>();
-        this.ChiTietSuDungs = new ArrayList<ChiTietSuDung>();
+        //this.HoaDons = new ArrayList<HoaDon>();
+        //this.ChiTietSuDungs = new ArrayList<ChiTietSuDung>();
     }
 }
