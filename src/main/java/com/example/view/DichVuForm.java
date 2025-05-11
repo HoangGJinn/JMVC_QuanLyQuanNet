@@ -180,39 +180,6 @@ public class DichVuForm extends JFrame {
     }
 // ... existing code ...
 
-    // load data đồ ăn lên form
-    public void loadDoAnData() {
-            try {
-                DichVuController controller = new DichVuController();
-                List<DvDoAn> danhSachDoAn = controller.layDanhSachDoAn();
-                
-                // Xóa dữ liệu cũ trong bảng
-                DefaultTableModel model = (DefaultTableModel) table.getModel();
-                model.setRowCount(0);
-                
-                // Thêm dữ liệu mới vào bảng
-                for (DvDoAn doAn : danhSachDoAn) {
-                    model.addRow(new Object[]{
-                        doAn.getMaDV(),
-                        doAn.getTenDoAn(),
-                        doAn.getDonGia(),
-                        doAn.isBestSeller() ? "Có" : "Không",
-                        doAn.getTrangThai()
-                    });
-                }
-                
-                // Cập nhật hiển thị bảng
-                table.repaint();
-                
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, 
-                    "Lỗi khi tải dữ liệu đồ ăn: " + e.getMessage(), 
-                    "Lỗi", 
-                    JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
-            }
-            
-    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

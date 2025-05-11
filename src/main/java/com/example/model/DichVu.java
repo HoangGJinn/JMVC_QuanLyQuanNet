@@ -35,7 +35,9 @@ public class DichVu {
         }
         public boolean setBestSeller(Boolean bestSeller) {
             this.bestSeller = bestSeller;
+            return false;
         }
+
         public long getDonGia() {
             return DonGia;
         }
