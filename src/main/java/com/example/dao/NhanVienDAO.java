@@ -54,7 +54,14 @@ public class NhanVienDAO {
             stmt.setString(2, sdt);
             stmt.setString(3, diaChi);
             stmt.setString(4, gioiTinh);
-            stmt.setDate(5, (java.sql.Date) ngaySinh);
+            // Convert java.util.Date to java.sql.Date if needed
+            java.sql.Date sqlDate;
+            if (ngaySinh instanceof java.sql.Date) {
+                sqlDate = (java.sql.Date) ngaySinh;
+            } else {
+                sqlDate = new java.sql.Date(ngaySinh.getTime());
+            }
+            stmt.setDate(5, sqlDate);
             stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -85,7 +92,14 @@ public class NhanVienDAO {
             stmt.setString(2, hoTen);
             stmt.setString(3, diaChi);
             stmt.setString(4, gioiTinh);
-            stmt.setDate(5, (java.sql.Date) ngaySinh);
+            // Convert java.util.Date to java.sql.Date if needed
+            java.sql.Date sqlDate;
+            if (ngaySinh instanceof java.sql.Date) {
+                sqlDate = (java.sql.Date) ngaySinh;
+            } else {
+                sqlDate = new java.sql.Date(ngaySinh.getTime());
+            }
+            stmt.setDate(5, sqlDate);
             stmt.executeUpdate();
 
         } catch (SQLException e) {
