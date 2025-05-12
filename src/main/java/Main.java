@@ -6,7 +6,7 @@ import java.sql.SQLException;
 public class Main {
     public static void main(String[] args) {
         // Thử kết nối cơ sở dữ liệu
-        try (Connection conn = DatabaseConnection.getConnection()) {
+        try (Connection conn = DatabaseConnection.getInstance()) {
             if (conn != null) {
                 System.out.println("Kết nối thành công!");
             } else {

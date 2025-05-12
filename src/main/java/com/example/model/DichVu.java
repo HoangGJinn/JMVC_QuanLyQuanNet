@@ -1,3 +1,5 @@
+package com.example.model;
+
 import java.util.ArrayList;
 
 public class DichVu {
