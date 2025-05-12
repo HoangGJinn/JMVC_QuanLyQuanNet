@@ -20,11 +20,8 @@ public class Main {
         }
 
         // Hiển thị form quản lý nhân viên
-        //NhanVienForm nhanVienForm = new NhanVienForm();
-        //nhanVienForm.setVisible(true);
+        NhanVienForm nhanVienForm = new NhanVienForm();
+        nhanVienForm.setVisible(true);
 
-        // Hiển thị form quản lý dịch vụ
-        DichVuForm dichVuForm = new DichVuForm();
-        dichVuForm.setVisible(true);
     }
 }

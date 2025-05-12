@@ -12,25 +12,7 @@ public class DvTheCao {
         this.LoaiThe = loaiThe;
 
     }
-    public String getMaDV() {
-        return maDV;
-    }
-    public void setMaDV(String maDV) {
-        this.maDV = maDV;
-    }
-    public int getDonGia() {
-        return DonGia;
-    }
 
-    public void setDonGia(int donGia) {
-        this.DonGia = donGia;
-    }
-    public String getLoaiThe() {
-        return LoaiThe;
-    }
-    public void setLoaiThe(String loaiThe) {
-        this.LoaiThe = loaiThe;
-    }
 
 
 }
