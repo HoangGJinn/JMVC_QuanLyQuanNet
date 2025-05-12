@@ -10,12 +10,19 @@ import java.util.Date;
 
 public class NhanVienDAO {
     private static NhanVienDAO instance;
+    private static Connection conn;
 
-    private NhanVienDAO() {}
+    private NhanVienDAO() {
+        conn = DatabaseConnection.getInstance();
+    }
 
     public static NhanVienDAO getInstance() {
         if (instance == null) {
-            instance = new NhanVienDAO();
+            synchronized (NhanVienDAO.class) {
+                if (instance == null) {
+                    instance = new NhanVienDAO();
+                }
+            }
         }
         return instance;
     }
@@ -23,8 +30,7 @@ public class NhanVienDAO {
     public List<NhanVien> layDsNhanVien() {
         List<NhanVien> list = new ArrayList<>();
         String sql = "SELECT * FROM DanhSachNhanVien";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
@@ -47,21 +53,12 @@ public class NhanVienDAO {
 
     public void themNhanVien(String hoTen, String sdt, String diaChi, String gioiTinh, Date ngaySinh) {
         String sql = "EXEC sp_ThemNhanVien ?, ?, ?, ?, ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, hoTen);
             stmt.setString(2, sdt);
             stmt.setString(3, diaChi);
             stmt.setString(4, gioiTinh);
-            // Convert java.util.Date to java.sql.Date if needed
-            java.sql.Date sqlDate;
-            if (ngaySinh instanceof java.sql.Date) {
-                sqlDate = (java.sql.Date) ngaySinh;
-            } else {
-                sqlDate = new java.sql.Date(ngaySinh.getTime());
-            }
-            stmt.setDate(5, sqlDate);
+            stmt.setDate(5, new java.sql.Date(ngaySinh.getTime()));
             stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -71,9 +68,7 @@ public class NhanVienDAO {
 
     public void doiMatKhau(String sdt, String matKhau) {
         String sql = "EXEC proc_doiMkNv ?, ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, sdt);
             stmt.setString(2, matKhau);
             stmt.executeUpdate();
@@ -85,21 +80,12 @@ public class NhanVienDAO {
 
     public void suaNhanVien(String maNV, String hoTen, String diaChi, String gioiTinh, Date ngaySinh) {
         String sql = "EXEC sp_SuaNhanVien ?, ?, ?, ?, ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, maNV);
             stmt.setString(2, hoTen);
             stmt.setString(3, diaChi);
             stmt.setString(4, gioiTinh);
-            // Convert java.util.Date to java.sql.Date if needed
-            java.sql.Date sqlDate;
-            if (ngaySinh instanceof java.sql.Date) {
-                sqlDate = (java.sql.Date) ngaySinh;
-            } else {
-                sqlDate = new java.sql.Date(ngaySinh.getTime());
-            }
-            stmt.setDate(5, sqlDate);
+            stmt.setDate(5, new java.sql.Date(ngaySinh.getTime()));
             stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -109,9 +95,7 @@ public class NhanVienDAO {
 
     public void xoaNhanVien(String maNV) {
         String sql = "EXEC sp_XoaNhanVien ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, maNV);
             stmt.executeUpdate();
 
@@ -123,9 +107,7 @@ public class NhanVienDAO {
     public List<NhanVien> timNhanVien(String timKiem) {
         List<NhanVien> list = new ArrayList<>();
         String sql = "SELECT * FROM fn_TimKiemNhanVien(?)";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, timKiem);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {

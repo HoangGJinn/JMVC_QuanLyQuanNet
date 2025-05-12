@@ -1,3 +1,5 @@
+package com.example.model;
+
 public class LoaiKm {
     private int maLoaiMay;
     private String tenLinhKien;

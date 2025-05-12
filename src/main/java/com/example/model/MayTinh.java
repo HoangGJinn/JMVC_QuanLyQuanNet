@@ -1,3 +1,5 @@
+package com.example.model;
+
 public class MayTinh {
     private String soMay;
     private String trangThai;

@@ -1,3 +1,5 @@
+package com.example.model;
+
 public class KhuyenMai {
     /*
             public string MaKM { get; set; }

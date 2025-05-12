@@ -1,3 +1,5 @@
+package com.example.model;
+
 public class DvDoUong {
     public String maDV;
     public int DonGia;
