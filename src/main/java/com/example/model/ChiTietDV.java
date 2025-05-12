@@ -15,7 +15,7 @@ public class ChiTietDV
     public String MaDV;
     public int DonGia;
     public int SoLuong;
-    public DichVu DichVu;
+    //public DichVu DichVu;
     public HoaDon HoaDon;
 
     public ChiTietDV(String maHD, String maDV, int donGia, int soLuong) {
