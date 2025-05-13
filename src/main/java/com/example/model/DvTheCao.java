@@ -5,4 +5,14 @@ public class DvTheCao {
     public int DonGia;
     public String LoaiThe;
     public DichVu DichVu;
+
+    public DvTheCao(String maDV, int donGia, String loaiThe) {
+        this.maDV = maDV;
+        this.DonGia = donGia;
+        this.LoaiThe = loaiThe;
+
+    }
+
+
+
 }

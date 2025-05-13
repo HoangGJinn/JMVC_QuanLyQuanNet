@@ -16,4 +16,18 @@ public class DvDoAn {
     public Boolean BestSeller;
     public String TrangThai;
     public DichVu DichVu;
+
+    public DvDoAn(String maDV, int donGia, String tenDoAn, Boolean bestSeller, String trangThai) {
+        this.MaDV = maDV;
+        this.TenDoAn = tenDoAn;
+        this.DonGia = donGia;
+        this.BestSeller = bestSeller;
+        this.TrangThai = trangThai;
+
+    }
+
+
+
+
+
 }
