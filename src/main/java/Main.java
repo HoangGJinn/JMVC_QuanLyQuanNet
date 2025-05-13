@@ -1,7 +1,10 @@
+
 import com.example.view.NhanVienForm;
 import com.example.util.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
+import com.example.view.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,5 +22,6 @@ public class Main {
         // Hiển thị form quản lý nhân viên
         NhanVienForm nhanVienForm = new NhanVienForm();
         nhanVienForm.setVisible(true);
+
     }
 }
