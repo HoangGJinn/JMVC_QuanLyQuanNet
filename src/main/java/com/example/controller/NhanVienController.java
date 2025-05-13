@@ -5,6 +5,7 @@ import com.example.model.NhanVien;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class NhanVienController {
@@ -16,26 +17,58 @@ public class NhanVienController {
     }
 
     public List<NhanVien> layDanhSachNhanVien() {
-        return nhanVienDAO.layDsNhanVien();
+        try {
+            return nhanVienDAO.layDsNhanVien();
+        } catch (Exception e) {
+            // Log lỗi nếu cần
+            e.printStackTrace();
+            return new ArrayList<>(); // Hoặc trả về danh sách rỗng
+        }
     }
 
     public void themNhanVien(String hoTen, String sdt, String diaChi, String gioiTinh, LocalDate ngaySinh) {
-        nhanVienDAO.themNhanVien(hoTen, sdt, diaChi, gioiTinh, Date.valueOf(ngaySinh));
+        try {
+            nhanVienDAO.themNhanVien(hoTen, sdt, diaChi, gioiTinh, Date.valueOf(ngaySinh));
+        } catch (Exception e) {
+            // Log lỗi nếu cần
+            e.printStackTrace();
+        }
     }
 
     public void suaNhanVien(String maNV, String hoTen, String diaChi, String gioiTinh, LocalDate ngaySinh) {
-        nhanVienDAO.suaNhanVien(maNV, hoTen, diaChi, gioiTinh, Date.valueOf(ngaySinh));
+        try {
+            nhanVienDAO.suaNhanVien(maNV, hoTen, diaChi, gioiTinh, Date.valueOf(ngaySinh));
+        } catch (Exception e) {
+            // Log lỗi nếu cần
+            e.printStackTrace();
+        }
     }
 
     public void xoaNhanVien(String maNV) {
-        nhanVienDAO.xoaNhanVien(maNV);
+        try {
+            nhanVienDAO.xoaNhanVien(maNV);
+        } catch (Exception e) {
+            // Log lỗi nếu cần
+            e.printStackTrace();
+        }
     }
 
     public void doiMatKhau(String sdt, String matKhauMoi) {
-        nhanVienDAO.doiMatKhau(sdt, matKhauMoi);
+        try {
+            nhanVienDAO.doiMatKhau(sdt, matKhauMoi);
+        } catch (Exception e) {
+            // Log lỗi nếu cần
+            e.printStackTrace();
+        }
     }
 
     public List<NhanVien> timNhanVien(String tuKhoa) {
-        return nhanVienDAO.timNhanVien(tuKhoa);
+        try {
+            return nhanVienDAO.timNhanVien(tuKhoa);
+        } catch (Exception e) {
+            // Log lỗi nếu cần
+            e.printStackTrace();
+            return null; // Hoặc trả về danh sách rỗng
+        }
     }
 }

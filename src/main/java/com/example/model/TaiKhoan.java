@@ -10,8 +10,9 @@ public class TaiKhoan {
     private String trangThai; // đã đổi từ boolean sang String
 
     // Constructor với các tham số
-    public TaiKhoan(String tenDangNhap, int soDu) {
+    public TaiKhoan(String tenDangNhap, String matKhau, int soDu) {
         this.tenDangNhap = tenDangNhap;
+        this.matKhau = matKhau;
         this.soDu = soDu;
     }
 
