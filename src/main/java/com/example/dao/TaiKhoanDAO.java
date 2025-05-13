@@ -27,7 +27,7 @@ public class TaiKhoanDAO {
     }
 
     // Lấy danh sách tài khoản
-    public List<TaiKhoan> layDsTaiKhoan() {
+    public List<TaiKhoan> layDsTaiKhoan() throws SQLException {
         List<TaiKhoan> list = new ArrayList<>();
         String sql = "SELECT * FROM DanhSachTaiKhoan";
         try (PreparedStatement stmt = conn.prepareStatement(sql);
@@ -35,98 +35,101 @@ public class TaiKhoanDAO {
 
             while (rs.next()) {
                 TaiKhoan tk = new TaiKhoan(
-                        rs.getString("TenTaiKhoan"),
-                        rs.getInt("SoDu")
+                        rs.getString("TenDangNhap"),
+                        rs.getString("MatKhau"),
+                        rs.getInt("SoDu"),
+                        rs.getDate("NgayTao"),
+                        rs.getString("TrangThai")
+
                 );
                 list.add(tk);
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return list;
     }
 
     // Thêm tài khoản mới
-    public void themTaiKhoan(String tenTaiKhoan, int soDu) {
+    public void themTaiKhoan(String tenTaiKhoan, int soDu) throws SQLException {
         String sql = "EXEC sp_ThemTaiKhoan ?, ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, tenTaiKhoan);
             stmt.setInt(2, soDu);
             stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
     // Cập nhật tài khoản
-    public void suaTaiKhoan(String tenTaiKhoan, int soDu) {
-        String sql = "EXEC sp_SuaTaiKhoan ?, ?";
+    public void suaTaiKhoan(String tenTaiKhoan, String matKhau, int soDu) throws SQLException {
+        String sql = "EXEC sp_SuaTaiKhoan ?, ?, ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, tenTaiKhoan);
-            stmt.setInt(2, soDu);
-            stmt.executeUpdate();
+            // Nếu mật khẩu rỗng, truyền NULL thay vì giá trị rỗng
+            if (matKhau == null || matKhau.isEmpty()) {
+                stmt.setNull(2, java.sql.Types.VARCHAR);  // Mật khẩu có thể là NULL nếu không có giá trị
+            } else {
+                stmt.setString(2, matKhau);  // Nếu có mật khẩu, truyền vào tham số thứ hai
+            }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+            // Truyền tham số vào câu lệnh
+            stmt.setString(1, tenTaiKhoan);  // Tham số đầu tiên là tên tài khoản
+            stmt.setInt(3, soDu);  // Tham số thứ ba là số dư
+
+            // Thực thi câu lệnh
+            stmt.executeUpdate();
         }
     }
 
-    // Xóa tài khoản
-    public void xoaTaiKhoan(String tenTaiKhoan) {
-        String sql = "EXEC sp_XoaTaiKhoan ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, tenTaiKhoan);
-            stmt.executeUpdate();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+    // Ví dụ thêm phương thức thực thi hàm scalar trong SQL Server
+    public int tinhTkMoi() throws SQLException {
+        String sql = "SELECT dbo.fn_TKMoiTrongThang()"; // Gọi hàm trong SQL Server
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            if (rs.next()) {
+                return rs.getInt(1);  // Lấy kết quả trả về từ hàm scalar
+            }
+
         }
+        return 0; // Trả về 0 nếu không có kết quả
     }
 
     // Tìm tài khoản theo tên
-    public List<TaiKhoan> timTaiKhoan(String tenTaiKhoan) {
+    public List<TaiKhoan> timTaiKhoan(String tenDangNhap) throws SQLException {
         List<TaiKhoan> list = new ArrayList<>();
-        String sql = "SELECT * FROM fn_TimKiemTaiKhoan(?)";
+        String sql = "SELECT * FROM fn_LayTaiKhoanTheoTenDangNhap(?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, tenTaiKhoan);
+            stmt.setString(1, tenDangNhap);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 TaiKhoan tk = new TaiKhoan(
-                        rs.getString("TenTaiKhoan"),
-                        rs.getInt("SoDu")
+                        rs.getString("TenDangNhap"),
+                        rs.getString("MatKhau"),
+                        rs.getInt("SoDu"),
+                        rs.getDate("NgayTao"),
+                        rs.getString("TrangThai")
                 );
                 list.add(tk);
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return list;
     }
 
     // Mở khóa tài khoản
-    public void moKhoaTaiKhoan(String tenTaiKhoan) {
+    public void moKhoaTaiKhoan(String tenTaiKhoan) throws SQLException {
         String sql = "EXEC proc_MoKhoaTaiKhoan ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, tenTaiKhoan);
             stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
     // Khóa tài khoản
-    public void khoaTaiKhoan(String tenTaiKhoan) {
+    public void khoaTaiKhoan(String tenTaiKhoan) throws SQLException {
         String sql = "EXEC proc_KhoaTaiKhoan ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, tenTaiKhoan);
             stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 }
