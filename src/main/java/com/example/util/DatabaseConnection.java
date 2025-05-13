@@ -18,37 +18,18 @@ public class DatabaseConnection {
     }
 
     public static Connection getInstance() {
-        if (connection == null) {
-            synchronized (DatabaseConnection.class) {
-                if (connection == null) {
-                    try {
+        try {
+            if (connection == null || connection.isClosed()) {  // 🔍 kiểm tra connection còn sống
+                synchronized (DatabaseConnection.class) {
+                    if (connection == null || connection.isClosed()) {
                         connection = DriverManager.getConnection(CONNECTION_URL);
-                        System.out.println("✅ Đã kết nối SQL Server thành công.");
-                    } catch (SQLException e) {
-                        System.err.println("❌ Kết nối thất bại:");
-                        e.printStackTrace();
                     }
                 }
             }
+        } catch (SQLException e) {
+            System.err.println("❌ Kết nối thất bại:");
+            e.printStackTrace();
         }
         return connection;
-    }
-
-    public static void closeConnection() {
-        if (connection != null) {
-            try {
-                connection.close();
-                connection = null;
-                System.out.println("🔌 Đã đóng kết nối cơ sở dữ liệu.");
-            } catch (SQLException e) {
-                System.err.println("❌ Lỗi khi đóng kết nối:");
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void resetInstance() {
-        closeConnection(); // đóng kết nối cũ
-        getInstance();     // khởi tạo lại kết nối
     }
 }

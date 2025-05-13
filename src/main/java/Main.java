@@ -1,5 +1,7 @@
 import com.example.view.NhanVienForm;
 import com.example.util.DatabaseConnection;
+import com.example.view.TaiKhoanForm;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -17,7 +19,11 @@ public class Main {
         }
 
         // Hiển thị form quản lý nhân viên
-        NhanVienForm nhanVienForm = new NhanVienForm();
-        nhanVienForm.setVisible(true);
+//        NhanVienForm nhanVienForm = new NhanVienForm();
+//        nhanVienForm.setVisible(true);
+
+        // Hiển thị form quản lý tài khoản
+        TaiKhoanForm taiKhoanForm = new TaiKhoanForm();
+        taiKhoanForm.setVisible(true);
     }
 }

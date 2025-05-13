@@ -27,7 +27,7 @@ public class NhanVienDAO {
         return instance;
     }
 
-    public List<NhanVien> layDsNhanVien() {
+    public List<NhanVien> layDsNhanVien() throws SQLException {
         List<NhanVien> list = new ArrayList<>();
         String sql = "SELECT * FROM DanhSachNhanVien";
         try (PreparedStatement stmt = conn.prepareStatement(sql);
@@ -44,14 +44,11 @@ public class NhanVienDAO {
                 );
                 list.add(nv);
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return list;
     }
 
-    public void themNhanVien(String hoTen, String sdt, String diaChi, String gioiTinh, Date ngaySinh) {
+    public void themNhanVien(String hoTen, String sdt, String diaChi, String gioiTinh, Date ngaySinh) throws SQLException {
         String sql = "EXEC sp_ThemNhanVien ?, ?, ?, ?, ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, hoTen);
@@ -60,25 +57,19 @@ public class NhanVienDAO {
             stmt.setString(4, gioiTinh);
             stmt.setDate(5, new java.sql.Date(ngaySinh.getTime()));
             stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    public void doiMatKhau(String sdt, String matKhau) {
+    public void doiMatKhau(String sdt, String matKhau) throws SQLException {
         String sql = "EXEC proc_doiMkNv ?, ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, sdt);
             stmt.setString(2, matKhau);
             stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    public void suaNhanVien(String maNV, String hoTen, String diaChi, String gioiTinh, Date ngaySinh) {
+    public void suaNhanVien(String maNV, String hoTen, String diaChi, String gioiTinh, Date ngaySinh) throws SQLException {
         String sql = "EXEC sp_SuaNhanVien ?, ?, ?, ?, ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, maNV);
@@ -87,24 +78,18 @@ public class NhanVienDAO {
             stmt.setString(4, gioiTinh);
             stmt.setDate(5, new java.sql.Date(ngaySinh.getTime()));
             stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    public void xoaNhanVien(String maNV) {
+    public void xoaNhanVien(String maNV) throws SQLException {
         String sql = "EXEC sp_XoaNhanVien ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, maNV);
             stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    public List<NhanVien> timNhanVien(String timKiem) {
+    public List<NhanVien> timNhanVien(String timKiem) throws SQLException {
         List<NhanVien> list = new ArrayList<>();
         String sql = "SELECT * FROM fn_TimKiemNhanVien(?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -121,9 +106,6 @@ public class NhanVienDAO {
                 );
                 list.add(nv);
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return list;
     }
