@@ -12,12 +12,19 @@ import java.util.List;
 
 public class DichVuDAO {
     private static DichVuDAO instance;
+    private static Connection conn;
 
-    private DichVuDAO() {}
+    private DichVuDAO() {
+        conn = DatabaseConnection.getInstance();
+    }
 
     public static DichVuDAO getInstance() {
         if (instance == null) {
-            instance = new DichVuDAO();
+            synchronized (DichVuDAO.class) {
+                if (instance == null) {
+                    instance = new DichVuDAO();
+                }
+            }
         }
         return instance;
     }
@@ -25,13 +32,11 @@ public class DichVuDAO {
     // Common methods for all service types
     public void xoaDichVu(String maDV) {
         String sql = "EXEC proc_XoaDV ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, maDV);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi xóa dịch vụ: " + e.getMessage());
         }
     }
 
@@ -40,8 +45,7 @@ public class DichVuDAO {
         List<DvTheCao> result = new ArrayList<>();
         String sql = "SELECT * FROM View_DichVuTheCao";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
+        try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
@@ -54,7 +58,6 @@ public class DichVuDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi lấy danh sách thẻ cào: " + e.getMessage());
         }
 
         return result;
@@ -62,32 +65,24 @@ public class DichVuDAO {
 
     public void themDVTheCao(String loaiThe, int menhGia) {
         String sql = "EXEC proc_ThemDVTheCao ?, ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, loaiThe);
             stmt.setInt(2, menhGia);
             stmt.executeUpdate();
-
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi thêm thẻ cào: " + e.getMessage());
         }
     }
 
     public void suaDVTheCao(String maDV, String loaiThe, int menhGia) {
         String sql = "EXEC proc_SuaDVTheCao ?, ?, ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, maDV);
             stmt.setString(2, loaiThe);
             stmt.setInt(3, menhGia);
             stmt.executeUpdate();
-
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi sửa thẻ cào: " + e.getMessage());
         }
     }
 
@@ -95,9 +90,7 @@ public class DichVuDAO {
         List<DvTheCao> result = new ArrayList<>();
         String sql = "SELECT * FROM fn_TimKiemDVTC(?)";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, tuKhoa);
             ResultSet rs = pstmt.executeQuery();
 
@@ -111,7 +104,6 @@ public class DichVuDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi tìm kiếm thẻ cào: " + e.getMessage());
         }
 
         return result;
@@ -122,8 +114,7 @@ public class DichVuDAO {
         List<DvDoAn> result = new ArrayList<>();
         String sql = "SELECT * FROM View_DichVuDoAn";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
+        try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
@@ -138,7 +129,6 @@ public class DichVuDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi lấy danh sách đồ ăn: " + e.getMessage());
         }
 
         return result;
@@ -148,9 +138,7 @@ public class DichVuDAO {
         List<DvDoAn> result = new ArrayList<>();
         String sql = "SELECT * FROM fn_TimKiemDVDA(?)";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, tuKhoa);
             ResultSet rs = pstmt.executeQuery();
 
@@ -166,7 +154,6 @@ public class DichVuDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi tìm kiếm đồ ăn: " + e.getMessage());
         }
 
         return result;
@@ -174,35 +161,27 @@ public class DichVuDAO {
 
     public void themDVDoAn(String tenDoAn, int donGia, boolean bestSeller) {
         String sql = "EXEC proc_ThemDVDoAn ?, ?, ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, tenDoAn);
             stmt.setInt(2, donGia);
             stmt.setBoolean(3, bestSeller);
             stmt.executeUpdate();
-
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi thêm đồ ăn: " + e.getMessage());
         }
     }
 
     public void suaDVDoAn(String maDV, String tenDoAn, int donGia, boolean bestSeller, String trangThai) {
         String sql = "EXEC proc_SuaDVDoAn ?, ?, ?, ?, ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, maDV);
             stmt.setString(2, tenDoAn);
             stmt.setInt(3, donGia);
             stmt.setBoolean(4, bestSeller);
             stmt.setString(5, trangThai);
             stmt.executeUpdate();
-
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi sửa đồ ăn: " + e.getMessage());
         }
     }
 
@@ -210,8 +189,7 @@ public class DichVuDAO {
         List<TopItem> result = new ArrayList<>();
         String sql = "SELECT * FROM Top5DoAn";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
+        try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
@@ -223,7 +201,6 @@ public class DichVuDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi lấy top 5 đồ ăn: " + e.getMessage());
         }
 
         return result;
@@ -233,8 +210,7 @@ public class DichVuDAO {
         List<TopItem> result = new ArrayList<>();
         String sql = "SELECT * FROM Top5DoAnItNhat";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
+        try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
@@ -246,7 +222,6 @@ public class DichVuDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi lấy top 5 đồ ăn ít nhất: " + e.getMessage());
         }
 
         return result;
@@ -257,8 +232,7 @@ public class DichVuDAO {
         List<DvDoUong> result = new ArrayList<>();
         String sql = "SELECT * FROM View_DichVuDoUong";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
+        try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
@@ -273,7 +247,6 @@ public class DichVuDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi lấy danh sách đồ uống: " + e.getMessage());
         }
 
         return result;
@@ -283,9 +256,7 @@ public class DichVuDAO {
         List<DvDoUong> result = new ArrayList<>();
         String sql = "SELECT * FROM fn_TimKiemDVDU(?)";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, tuKhoa);
             ResultSet rs = pstmt.executeQuery();
 
@@ -301,43 +272,34 @@ public class DichVuDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi tìm kiếm đồ uống: " + e.getMessage());
         }
 
         return result;
     }
 
     public void themDVDoUong(String tenDoUong, int donGia, boolean bestSeller) {
-        String sql = "EXEC proc_ThemDVDouong ?, ?, ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        String sql = "EXEC proc_ThemDVDoUong ?, ?, ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, tenDoUong);
             stmt.setInt(2, donGia);
             stmt.setBoolean(3, bestSeller);
             stmt.executeUpdate();
-
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi thêm đồ uống: " + e.getMessage());
         }
     }
 
     public void suaDVDoUong(String maDV, String tenDoUong, int donGia, boolean bestSeller, String trangThai) {
-        String sql = "EXEC proc_SuaDVDouong ?, ?, ?, ?, ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        String sql = "EXEC proc_SuaDVDoUong ?, ?, ?, ?, ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, maDV);
             stmt.setString(2, tenDoUong);
             stmt.setInt(3, donGia);
             stmt.setBoolean(4, bestSeller);
             stmt.setString(5, trangThai);
             stmt.executeUpdate();
-
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi sửa đồ uống: " + e.getMessage());
         }
     }
 
@@ -345,8 +307,7 @@ public class DichVuDAO {
         List<TopItem> result = new ArrayList<>();
         String sql = "SELECT * FROM Top5DoUong";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
+        try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
@@ -358,7 +319,6 @@ public class DichVuDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi lấy top 5 đồ uống: " + e.getMessage());
         }
 
         return result;
@@ -368,8 +328,7 @@ public class DichVuDAO {
         List<TopItem> result = new ArrayList<>();
         String sql = "SELECT * FROM Top5DoUongItNhat";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
+        try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
@@ -381,7 +340,6 @@ public class DichVuDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi lấy top 5 đồ uống ít nhất: " + e.getMessage());
         }
 
         return result;
@@ -390,31 +348,42 @@ public class DichVuDAO {
     // Computer usage methods
     public void batDauThue(String soMay, String tenDangNhap) {
         String sql = "EXEC sp_BatDauSuDungMay ?, ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, tenDangNhap.isEmpty() ? null : tenDangNhap);
             stmt.setString(2, soMay.isEmpty() ? null : soMay);
             stmt.executeUpdate();
-
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi bắt đầu thuê máy: " + e.getMessage());
         }
     }
 
     public void ketThucThue(String soMay, String tenDangNhap) {
         String sql = "EXEC sp_KetThucSuDungMay ?, ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, tenDangNhap.isEmpty() ? null : tenDangNhap);
             stmt.setString(2, soMay.isEmpty() ? null : soMay);
             stmt.executeUpdate();
-
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Lỗi khi kết thúc thuê máy: " + e.getMessage());
+        }
+    }
+
+    // Refresh connection if needed
+    public void refreshConnection() {
+        if (conn == null) {
+            conn = DatabaseConnection.getInstance();
+            return;
+        }
+        
+        try {
+            if (conn.isClosed()) {
+                conn = DatabaseConnection.getInstance();
+                System.out.println("Database connection refreshed successfully");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error checking connection state: " + e.getMessage());
+            conn = DatabaseConnection.getInstance();
+            System.out.println("Database connection refreshed after error");
         }
     }
 
