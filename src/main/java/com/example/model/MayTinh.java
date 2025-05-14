@@ -7,12 +7,22 @@ public class MayTinh {
     private String trangThai;
     private Date ngayLapDat;
     private int maLoaiMay;
+    private double thoiGianSD;
 
     public MayTinh(String soMay, String trangThai, Date ngayLapDat, int maLoaiMay) {
         this.soMay = soMay;
         this.trangThai = trangThai;
         this.ngayLapDat = ngayLapDat;
         this.maLoaiMay = maLoaiMay;
+        this.thoiGianSD = 0;
+    }
+    
+    public MayTinh(String soMay, String trangThai, Date ngayLapDat, int maLoaiMay, double thoiGianSD) {
+        this.soMay = soMay;
+        this.trangThai = trangThai;
+        this.ngayLapDat = ngayLapDat;
+        this.maLoaiMay = maLoaiMay;
+        this.thoiGianSD = thoiGianSD;
     }
 
     public String getSoMay() {
@@ -45,5 +55,13 @@ public class MayTinh {
 
     public void setMaLoaiMay(int maLoaiMay) {
         this.maLoaiMay = maLoaiMay;
+    }
+    
+    public double getThoiGianSD() {
+        return thoiGianSD;
+    }
+    
+    public void setThoiGianSD(double thoiGianSD) {
+        this.thoiGianSD = thoiGianSD;
     }
 }
