@@ -118,7 +118,7 @@ public class MenuForm extends JFrame {
         versionPanel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
         versionPanel.setMaximumSize(new Dimension(220, 50));
         
-        JLabel versionLabel = new JLabel("Version 1.0");
+        JLabel versionLabel = new JLabel("Giáp, Huy, Danh");
         versionLabel.setFont(new Font("Arial", Font.PLAIN, 12));
         versionLabel.setForeground(new Color(150, 150, 170));
         versionLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -379,6 +379,13 @@ public class MenuForm extends JFrame {
             else if (childForm instanceof HoaDonForm) {
                 childForm.setVisible(false);
                 Container content = ((HoaDonForm)childForm).getContent();
+                mainContentPanel.add(content, BorderLayout.CENTER);
+            }
+            else if (childForm instanceof DichVuForm) {
+                // Get the content from DichVuForm
+                childForm.setVisible(false);
+                // Use the getContent method we added to DichVuForm
+                Container content = ((DichVuForm)childForm).getContent();
                 mainContentPanel.add(content, BorderLayout.CENTER);
             }
             else {

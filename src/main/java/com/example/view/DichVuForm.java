@@ -83,6 +83,11 @@ public class DichVuForm extends JFrame {
         loadCardData();
     }
 
+    // Method to get content for embedding in MenuForm
+    public Container getContent() {
+        return getContentPane();
+    }
+
     private void initComponents() {
         setTitle("Quản lý Dịch vụ");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
