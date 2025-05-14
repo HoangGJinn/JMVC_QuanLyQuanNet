@@ -405,4 +405,83 @@ public class DichVuDAO {
             return soLuong;
         }
     }
+    
+    /**
+     * Lấy tên dịch vụ dựa vào mã dịch vụ
+     * @param maDV Mã dịch vụ cần tìm
+     * @return Tên dịch vụ hoặc mã dịch vụ nếu không tìm thấy
+     */
+    public String layTenDichVu(String maDV) {
+        try {
+            String sql = "SELECT * FROM View_DichVu WHERE MaDV = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, maDV);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        // Kiểm tra các cột tên dịch vụ có thể có
+                        String ten = null;
+                        try {
+                            ten = rs.getString("TenDV");
+                            if (ten != null && !ten.isEmpty()) return ten;
+                        } catch (SQLException e) {
+                            // Cột không tồn tại, thử cột khác
+                        }
+                        
+                        try {
+                            ten = rs.getString("TenDoAn");
+                            if (ten != null && !ten.isEmpty()) return ten;
+                        } catch (SQLException e) {
+                            // Cột không tồn tại, thử cột khác
+                        }
+                        
+                        try {
+                            ten = rs.getString("TenDoUong");
+                            if (ten != null && !ten.isEmpty()) return ten;
+                        } catch (SQLException e) {
+                            // Cột không tồn tại, thử cột khác
+                        }
+                        
+                        try {
+                            ten = rs.getString("LoaiThe");
+                            if (ten != null && !ten.isEmpty()) return "Thẻ " + ten;
+                        } catch (SQLException e) {
+                            // Cột không tồn tại
+                        }
+                    }
+                }
+            }
+            
+            // Thử tìm trong các bảng cụ thể nếu view không có kết quả
+            String[] queries = {
+                "SELECT TenDoAn AS Ten FROM View_DichVuDoAn WHERE MaDV = ?",
+                "SELECT TenDoUong AS Ten FROM View_DichVuDoUong WHERE MaDV = ?",
+                "SELECT LoaiThe AS Ten FROM View_DichVuTheCao WHERE MaDV = ?"
+            };
+            
+            for (String query : queries) {
+                try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                    pstmt.setString(1, maDV);
+                    try (ResultSet rs = pstmt.executeQuery()) {
+                        if (rs.next()) {
+                            String ten = rs.getString("Ten");
+                            if (ten != null && !ten.isEmpty()) {
+                                if (query.contains("TheCao")) {
+                                    return "Thẻ " + ten;
+                                }
+                                return ten;
+                            }
+                        }
+                    }
+                } catch (SQLException e) {
+                    // Bỏ qua lỗi và thử query tiếp theo
+                }
+            }
+            
+            // Trả về mã dịch vụ nếu không tìm thấy tên
+            return maDV;
+        } catch (Exception e) {
+            System.err.println("Lỗi khi lấy tên dịch vụ: " + e.getMessage());
+            return maDV; // Trả về mã dịch vụ trong trường hợp lỗi
+        }
+    }
 }

@@ -254,4 +254,21 @@ public class DichVuController {
             throw new RuntimeException("Lỗi khi kết thúc sử dụng máy: " + e.getMessage(), e);
         }
     }
+
+    /**
+     * Lấy tên dịch vụ theo mã dịch vụ
+     * @param maDV Mã dịch vụ cần tra cứu
+     * @return Tên dịch vụ, hoặc mã dịch vụ nếu không tìm thấy
+     */
+    public String layTenDichVu(String maDV) {
+        try {
+            if (maDV == null || maDV.trim().isEmpty()) {
+                return "";
+            }
+            return dichVuDAO.layTenDichVu(maDV);
+        } catch (Exception e) {
+            System.err.println("Lỗi khi lấy tên dịch vụ: " + e.getMessage());
+            return maDV; // Trả về mã dịch vụ trong trường hợp lỗi
+        }
+    }
 }
