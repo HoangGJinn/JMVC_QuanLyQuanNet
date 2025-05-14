@@ -17,7 +17,6 @@ public class DichVu {
             this.DonGia = donGia;
             this.TrangThai = trangThai;
         }
-
         public String getMaDV() {
             return maDV;
         }
@@ -33,22 +32,26 @@ public class DichVu {
         public Boolean getBestSeller() {
             return bestSeller;
         }
-        public boolean setBestSeller(Boolean bestSeller) {
+        public void setBestSeller(Boolean bestSeller) {
             this.bestSeller = bestSeller;
-            return false;
         }
-
-        public long getDonGia() {
+        public int getDonGia() {
             return DonGia;
         }
         public void setDonGia(int donGia) {
-            this.DonGia = donGia;
+            DonGia = donGia;
         }
         public String getTrangThai() {
             return TrangThai;
         }
         public void setTrangThai(String trangThai) {
-            this.TrangThai = trangThai;
+            TrangThai = trangThai;
         }
+
+        public DichVu() {
+            // Constructor mặc định
+        }
+
+
 
 }

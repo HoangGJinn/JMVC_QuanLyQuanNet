@@ -104,6 +104,7 @@ public class DichVuController {
 
     public void suaDoAn(String maDV, String tenDoAn, int donGia, boolean bestSeller, String trangThai) {
         try {
+            // Input Validation
             if (maDV == null || maDV.trim().isEmpty()) {
                 throw new IllegalArgumentException("Mã đồ ăn không được để trống");
             }
@@ -116,10 +117,28 @@ public class DichVuController {
             if (trangThai == null || trangThai.trim().isEmpty()) {
                 throw new IllegalArgumentException("Trạng thái không được để trống");
             }
+
+            // Log parameters before calling DAO
+            System.out.println("[Controller] Attempting to update food:");
+            System.out.println("  - MaDV: " + maDV);
+            System.out.println("  - TenDoAn: " + tenDoAn);
+            System.out.println("  - DonGia: " + donGia);
+            System.out.println("  - BestSeller: " + bestSeller);
+            System.out.println("  - TrangThai: " + trangThai);
+
+            // Call DAO method
             dichVuDAO.suaDVDoAn(maDV, tenDoAn, donGia, bestSeller, trangThai);
+
+            // Log success after DAO call
+            System.out.println("[Controller] DAO update method called successfully for MaDV: " + maDV);
+
         } catch (IllegalArgumentException e) {
-            throw e;
+            System.err.println("[Controller] Validation error: " + e.getMessage());
+            throw e; // Re-throw validation errors
         } catch (Exception e) {
+            System.err.println("[Controller] Error during food update for MaDV " + maDV + ": " + e.getMessage());
+            e.printStackTrace(); // Print stack trace for detailed debugging
+            // Wrap and re-throw general exceptions
             throw new RuntimeException("Lỗi khi sửa đồ ăn: " + e.getMessage(), e);
         }
     }

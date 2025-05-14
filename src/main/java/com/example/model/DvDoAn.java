@@ -18,16 +18,32 @@ public class DvDoAn {
     public DichVu DichVu;
 
     public DvDoAn(String maDV, int donGia, String tenDoAn, Boolean bestSeller, String trangThai) {
+        this.DichVu = new DichVu(maDV, tenDoAn, bestSeller, donGia, trangThai);
         this.MaDV = maDV;
-        this.TenDoAn = tenDoAn;
         this.DonGia = donGia;
+        this.TenDoAn = tenDoAn;
         this.BestSeller = bestSeller;
         this.TrangThai = trangThai;
-
     }
 
+    // Getter methods
+    public String getMaDV() {
+        return MaDV;
+    }
 
+    public int getDonGia() {
+        return DonGia;
+    }
 
+    public String getTenDoAn() {
+        return TenDoAn;
+    }
 
+    public Boolean getBestSeller() {
+        return BestSeller;
+    }
 
+    public String getTrangThai() {
+        return TrangThai;
+    }
 }
