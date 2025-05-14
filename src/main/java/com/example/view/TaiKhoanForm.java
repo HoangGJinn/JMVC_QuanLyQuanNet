@@ -22,18 +22,30 @@ public class TaiKhoanForm extends JFrame {
     private JCheckBox changePasswordCheckbox;
     private JSplitPane splitPane;
     private JButton lockButton;
+    
+    // Main content panel and embedded flag
+    private JPanel mainContentPanel;
+    private boolean isEmbedded = false;
 
     public TaiKhoanForm() {
+        this(false);
+    }
+    
+    public TaiKhoanForm(boolean isEmbedded) {
+        this.isEmbedded = isEmbedded;
         controller = new TaiKhoanController(); // Controller đã có
 
         setTitle("Quản Lý Tài Khoản");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(1000, 600));
-        setLocationRelativeTo(null);
-
-        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
-        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        mainPanel.setBackground(new Color(34, 34, 51)); // Nền tối
+        if (!isEmbedded) {
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setMinimumSize(new Dimension(1000, 600));
+            setLocationRelativeTo(null);
+        }
+        
+        // Create main content panel
+        mainContentPanel = new JPanel(new BorderLayout(10, 10));
+        mainContentPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        mainContentPanel.setBackground(new Color(34, 34, 51)); // Nền tối
 
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
@@ -53,23 +65,29 @@ public class TaiKhoanForm extends JFrame {
             loadData();
         });
 
-
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
         topPanel.add(searchPanel, BorderLayout.EAST);
 
-        mainPanel.add(topPanel, BorderLayout.NORTH);
+        mainContentPanel.add(topPanel, BorderLayout.NORTH);
 
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createTablePanel(), createFormPanel());
         splitPane.setDividerLocation(600);
         splitPane.setResizeWeight(0.6);
         splitPane.setBorder(null);
-        mainPanel.add(splitPane, BorderLayout.CENTER);
-        add(mainPanel);
+        mainContentPanel.add(splitPane, BorderLayout.CENTER);
+        
+        if (!isEmbedded) {
+            add(mainContentPanel);
+            setVisible(true);
+        }
 
         loadData();
         formPanel.setVisible(false); // Ẩn formPanel ngay từ đầu
-        setVisible(true);
+    }
+    
+    public Container getContent() {
+        return mainContentPanel;
     }
 
     private JPanel createTablePanel() {

@@ -1,7 +1,7 @@
 package com.example.dao;
 
 import com.example.model.LoaiMay;
-import com.example.util.DBUtil;
+import com.example.util.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,12 +12,16 @@ public class LoaiMayDAO {
     private Connection conn;
 
     private LoaiMayDAO() {
-        conn = DBUtil.getConnection();
+        conn = DatabaseConnection.getInstance();
     }
 
     public static LoaiMayDAO getInstance() {
         if (instance == null) {
-            instance = new LoaiMayDAO();
+            synchronized (LoaiMayDAO.class) {
+                if (instance == null) {
+                    instance = new LoaiMayDAO();
+                }
+            }
         }
         return instance;
     }
@@ -26,8 +30,8 @@ public class LoaiMayDAO {
         List<LoaiMay> list = new ArrayList<>();
         String sql = "SELECT * FROM DanhSachLoaiMay";
 
-        try (PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 LoaiMay lm = new LoaiMay(
                         rs.getInt("MaLoaiMay"),
@@ -44,7 +48,7 @@ public class LoaiMayDAO {
     }
 
     public int themLoaiMay(String tenLoaiMay, int soTienMotGio) {
-        String sql = "EXEC proc_themLoaiMay ?, ?";
+        String sql = "EXEC proc_ThemLoaiMay ?, ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, tenLoaiMay);
             ps.setInt(2, soTienMotGio);
@@ -57,45 +61,46 @@ public class LoaiMayDAO {
     }
 
     public boolean suaLoaiMay(int maLoaiMay, String tenLoaiMay, int soTienMotGio) {
-        String sql = "EXEC proc_suaLoaiMay ?, ?, ?";
+        String sql = "EXEC proc_SuaLoaiMay ?, ?, ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, maLoaiMay);
             ps.setString(2, tenLoaiMay);
             ps.setInt(3, soTienMotGio);
-            ps.executeUpdate();
-            return true;
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
 
     public boolean xoaLoaiMay(int maLoaiMay) {
-        String sql = "EXEC proc_xoaLoaiMay ?";
+        String sql = "EXEC proc_XoaLoaiMay ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, maLoaiMay);
-            ps.executeUpdate();
-            return true;
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
 
-    public List<LoaiMay> timKiemLoaiMay(String tenLoaiMay) {
+    public List<LoaiMay> timKiemLoaiMay(String searchText) {
         List<LoaiMay> list = new ArrayList<>();
-        String sql = "SELECT * FROM func_timKiemLoaiMay (?)";
+        String sql = "SELECT * FROM DanhSachLoaiMay WHERE TenLoaiMay LIKE ?";
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, tenLoaiMay);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                LoaiMay lm = new LoaiMay(
-                        rs.getInt("MaLoaiMay"),
-                        rs.getString("TenLoaiMay"),
-                        rs.getInt("SoTienMotGio")
-                );
-                list.add(lm);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + searchText + "%");
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    LoaiMay lm = new LoaiMay(
+                            rs.getInt("MaLoaiMay"),
+                            rs.getString("TenLoaiMay"),
+                            rs.getInt("SoTienMotGio")
+                    );
+                    list.add(lm);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

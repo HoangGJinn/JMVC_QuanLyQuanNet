@@ -36,9 +36,10 @@ public class MayTinhDAO {
                 while (rs.next()) {
                     MayTinh mt = new MayTinh(
                             rs.getString("SoMay"),
-                            rs.getDate("NgayLapDat"),
                             rs.getString("TrangThai"),
-                            rs.getInt("MaLoaiMay")
+                            rs.getDate("NgayLapDat"),
+                            rs.getInt("MaLoaiMay"),
+                            rs.getDouble("TongTGSD")
                     );
                     list.add(mt);
                 }
@@ -50,15 +51,16 @@ public class MayTinhDAO {
     // Lấy toàn bộ danh sách máy
     public List<MayTinh> layDsMayTinh() throws SQLException {
         List<MayTinh> list = new ArrayList<>();
-        String sql = "SELECT * FROM DanhSachMayTinh ORDER BY SoMay";
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        String sql = "SELECT * FROM DanhSachMayTinh ORDER BY SoMay ASC";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 MayTinh mt = new MayTinh(
                         rs.getString("SoMay"),
-                        rs.getDate("NgayLapDat"),
                         rs.getString("TrangThai"),
-                        rs.getInt("MaLoaiMay")
+                        rs.getDate("NgayLapDat"),
+                        rs.getInt("MaLoaiMay"),
+                        rs.getDouble("TongTGSD")
                 );
                 list.add(mt);
             }
@@ -67,10 +69,10 @@ public class MayTinhDAO {
     }
 
     // Thêm máy tính
-    public boolean themMayTinh(Date ngayLapDat, int maLoaiMay) throws SQLException {
+    public boolean themMayTinh(java.sql.Date ngayLapDat, int maLoaiMay) throws SQLException {
         String sql = "EXEC proc_themMayTinh ?, ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setDate(1, new java.sql.Date(ngayLapDat.getTime()));
+            stmt.setDate(1, ngayLapDat);
             stmt.setInt(2, maLoaiMay);
             stmt.executeUpdate();
             return true;
@@ -89,19 +91,20 @@ public class MayTinhDAO {
         }
     }
 
-    // Tìm kiếm máy tính
-    public List<MayTinh> timKiemMayTinh(String soMay) throws SQLException {
+    // Tìm kiếm máy tính theo mã máy
+    public List<MayTinh> timKiemMayTinh(String searchText) throws SQLException {
         List<MayTinh> list = new ArrayList<>();
-        String sql = "SELECT * FROM func_timKiemMayTinh (?) ORDER BY SoMay";
+        String sql = "SELECT * FROM DanhSachMayTinh WHERE SoMay LIKE ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, soMay);
+            stmt.setString(1, "%" + searchText + "%");
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     MayTinh mt = new MayTinh(
                             rs.getString("SoMay"),
-                            rs.getDate("NgayLapDat"),
                             rs.getString("TrangThai"),
-                            rs.getInt("MaLoaiMay")
+                            rs.getDate("NgayLapDat"),
+                            rs.getInt("MaLoaiMay"),
+                            rs.getDouble("TongTGSD")
                     );
                     list.add(mt);
                 }

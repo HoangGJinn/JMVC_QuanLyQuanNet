@@ -22,15 +22,28 @@ public class NhanVienForm extends JFrame {
     private JTextField txtHoTen, txtSdt, txtDiaChi;
     private JComboBox<String> cbGioiTinh;
     private JTextField txtNgaySinh;
+    
+    // Main content panel for embedding
+    private JPanel mainContentPanel;
+    private boolean isEmbedded = false;
 
     public NhanVienForm() {
+        this(false);
+    }
+    
+    public NhanVienForm(boolean isEmbedded) {
+        this.isEmbedded = isEmbedded;
         controller = new NhanVienController();
 
         setTitle("Danh Sách Nhân Viên");
-        setSize(1200, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setLayout(new BorderLayout(10, 10));
+        if (!isEmbedded) {
+            setSize(1200, 600);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setLocationRelativeTo(null);
+        }
+        
+        // Create main content panel
+        mainContentPanel = new JPanel(new BorderLayout(10, 10));
 
         // ============ Top Panel ============
         JButton btnAdd = new JButton("Thêm Mới");
@@ -50,7 +63,7 @@ public class NhanVienForm extends JFrame {
         topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
         topPanel.add(btnAdd, BorderLayout.WEST);
         topPanel.add(searchField, BorderLayout.EAST);
-        add(topPanel, BorderLayout.NORTH);
+        mainContentPanel.add(topPanel, BorderLayout.NORTH);
 
         // ============ Table Panel ============
         String[] columnNames = {
@@ -69,7 +82,7 @@ public class NhanVienForm extends JFrame {
             }
         });
         JScrollPane scrollPane = new JScrollPane(table);
-        add(scrollPane, BorderLayout.CENTER);
+        mainContentPanel.add(scrollPane, BorderLayout.CENTER);
 
         // ============ Input Form Panel ============
         JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10)); // Thay đổi số hàng và cột để có đủ chỗ cho tất cả các trường
@@ -90,7 +103,7 @@ public class NhanVienForm extends JFrame {
         formPanel.add(createLabeledField("Giới tính", cbGioiTinh));
         formPanel.add(createLabeledField("Ngày sinh", txtNgaySinh));
         formPanel.add(createLabeledField("Địa chỉ", txtDiaChi));
-        add(formPanel, BorderLayout.WEST);  // Đưa formPanel vào BorderLayout.WEST để nó hiển thị rõ hơn
+        mainContentPanel.add(formPanel, BorderLayout.WEST);  // Đưa formPanel vào BorderLayout.WEST để nó hiển thị rõ hơn
 
         // ============ Button Panel ============
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
@@ -123,15 +136,20 @@ public class NhanVienForm extends JFrame {
 
         }
 
-        add(buttonPanel, BorderLayout.PAGE_END);
+        mainContentPanel.add(buttonPanel, BorderLayout.PAGE_END);
+        
+        if (!isEmbedded) {
+            setContentPane(mainContentPanel);
+            setVisible(true);
+        }
 
         // Load dữ liệu bảng
         loadNhanVienData();
     }
-
-
-
-
+    
+    public Container getContent() {
+        return mainContentPanel;
+    }
 
     private JPanel createLabeledField(String label, JComponent field) {
         JPanel panel = new JPanel(new BorderLayout(5, 5));

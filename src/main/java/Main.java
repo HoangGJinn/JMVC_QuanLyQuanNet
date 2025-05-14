@@ -27,7 +27,16 @@ public class Main {
 //        nhanVienForm.setVisible(true);
 
         // Hiển thị form quản lý tài khoản
-        TaiKhoanForm taiKhoanForm = new TaiKhoanForm();
-        taiKhoanForm.setVisible(true);
+//        TaiKhoanForm taiKhoanForm = new TaiKhoanForm();
+//        taiKhoanForm.setVisible(true);
+
+        // Hiển thị form quản lý máy tính
+//        MayTinhForm mayTinhForm = new MayTinhForm();
+//        mayTinhForm.setVisible(true);
+
+        MenuForm menuForm = new MenuForm();
+        menuForm.setVisible(true);
+
+        // Hiển thị form quản lý loại máy
     }
 }
