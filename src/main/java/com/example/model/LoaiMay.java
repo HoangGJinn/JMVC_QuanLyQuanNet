@@ -1,30 +1,37 @@
 package com.example.model;
 
-import java.util.ArrayList;
-
 public class LoaiMay {
-    /*
-            public LOAIMAY()
-        {
-            this.LINHKIENs = new HashSet<LINHKIEN>();
-            this.MAYTINHs = new HashSet<MAYTINH>();
-        }
+    private int maLoaiMay;
+    private String tenLoaiMay;
+    private int soTienMotGio;
 
-        public int MaLoaiMay { get; set; }
-        public string TenLoaiMay { get; set; }
-        public int SoTienMotGio { get; set; }
+    public LoaiMay(int maLoaiMay, String tenLoaiMay, int soTienMotGio) {
+        this.maLoaiMay = maLoaiMay;
+        this.tenLoaiMay = tenLoaiMay;
+        this.soTienMotGio = soTienMotGio;
+    }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<LINHKIEN> LINHKIENs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MAYTINH> MAYTINHs { get; set; }
-     */
-    public int maLoaiMay;
-    public String tenLoaiMay;
-    public int soTienMotGio;
-    public ArrayList<MayTinh> mayTinhs;
-    public ArrayList<LinhKien> linhKiens;
+    public int getMaLoaiMay() {
+        return maLoaiMay;
+    }
 
+    public void setMaLoaiMay(int maLoaiMay) {
+        this.maLoaiMay = maLoaiMay;
+    }
 
+    public String getTenLoaiMay() {
+        return tenLoaiMay;
+    }
 
+    public void setTenLoaiMay(String tenLoaiMay) {
+        this.tenLoaiMay = tenLoaiMay;
+    }
+
+    public int getSoTienMotGio() {
+        return soTienMotGio;
+    }
+
+    public void setSoTienMotGio(int soTienMotGio) {
+        this.soTienMotGio = soTienMotGio;
+    }
 }
