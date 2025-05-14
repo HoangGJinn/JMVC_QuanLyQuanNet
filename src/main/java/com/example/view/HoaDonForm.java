@@ -512,7 +512,8 @@ public class HoaDonForm extends JFrame {
                 System.out.println("Đây là hóa đơn dịch vụ, mở cửa sổ ChiTietHoaDonDV");
 
                 // Create and show the dialog with the invoice ID
-                ChiTietHoaDonDV chiTietDialog = new ChiTietHoaDonDV(this, maHD.trim());
+                ChiTietHoaDonDV chiTietDialog = new ChiTietHoaDonDV(null, maHD.trim());
+                chiTietDialog.setLocationRelativeTo(null);
 
                 // Log success
                 System.out.println("Dialog created successfully for invoice ID: " + maHD);
@@ -526,7 +527,8 @@ public class HoaDonForm extends JFrame {
                 System.out.println("Đây là hóa đơn nạp tiền, mở cửa sổ ChiTietHoaDonNap");
                 
                 // Create and show the dialog with the invoice ID
-                ChiTietHoaDonNap chiTietDialog = new ChiTietHoaDonNap(this, maHD.trim());
+                ChiTietHoaDonNap chiTietDialog = new ChiTietHoaDonNap(null, maHD.trim());
+                chiTietDialog.setLocationRelativeTo(null);
                 
                 // Log success
                 System.out.println("Dialog created successfully for invoice ID: " + maHD);
@@ -539,9 +541,9 @@ public class HoaDonForm extends JFrame {
             }
 
             // Otherwise show a generic dialog for other invoice types
-            JDialog detailDialog = new JDialog(this, "Chi tiết hóa đơn #" + maHD, true);
+            JDialog detailDialog = new JDialog((Frame)null, "Chi tiết hóa đơn #" + maHD, true);
             detailDialog.setSize(600, 500);
-            detailDialog.setLocationRelativeTo(this);
+            detailDialog.setLocationRelativeTo(null);
             detailDialog.setLayout(new BorderLayout());
 
             JPanel panel = new JPanel(new BorderLayout());
