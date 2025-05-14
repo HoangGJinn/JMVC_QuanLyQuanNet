@@ -1,54 +1,60 @@
 package com.example.model;
 
-public class ChiTietDV
-{
-    /*
-            public string MaHD { get; set; }
-        public string MaDV { get; set; }
-        public int DonGia { get; set; }
-        public int SoLuong { get; set; }
-
-        public virtual DICHVU DICHVU { get; set; }
-        public virtual HOADON HOADON { get; set; }
-     */
-    public String MaHD;
-    public String MaDV;
-    public int DonGia;
-    public int SoLuong;
-    //public DichVu DichVu;
-    public HoaDon HoaDon;
-
-    public ChiTietDV(String maHD, String maDV, int donGia, int soLuong) {
-        this.MaHD = maHD;
-        this.MaDV = maDV;
-        this.DonGia = donGia;
-        this.SoLuong = soLuong;
+public class ChiTietDV {
+    private String maDV;
+    private String tenDV;
+    private Integer donGia;
+    private Integer soLuong;
+    private Integer thanhTien;
+    
+    public ChiTietDV() {
     }
-    public String getMaHD() {
-        return MaHD;
+    
+    public ChiTietDV(String maDV, String tenDV, Integer donGia, Integer soLuong, Integer thanhTien) {
+        this.maDV = maDV;
+        this.tenDV = tenDV;
+        this.donGia = donGia;
+        this.soLuong = soLuong;
+        this.thanhTien = thanhTien;
     }
-    public void setMaHD(String maHD) {
-        this.MaHD = maHD;
-    }
+    
     public String getMaDV() {
-        return MaDV;
+        return maDV;
     }
+    
     public void setMaDV(String maDV) {
-        this.MaDV = maDV;
+        this.maDV = maDV;
     }
-    public int getDonGia() {
-        return DonGia;
+    
+    public String getTenDV() {
+        return tenDV;
     }
-
-    public void setDonGia(int donGia) {
-        this.DonGia = donGia;
+    
+    public void setTenDV(String tenDV) {
+        this.tenDV = tenDV;
     }
-    public int getSoLuong() {
-        return SoLuong;
+    
+    public Integer getDonGia() {
+        return donGia;
     }
-    public void setSoLuong(int soLuong) {
-        this.SoLuong = soLuong;
+    
+    public void setDonGia(Integer donGia) {
+        this.donGia = donGia;
     }
-
-
+    
+    public Integer getSoLuong() {
+        return soLuong;
+    }
+    
+    public void setSoLuong(Integer soLuong) {
+        this.soLuong = soLuong;
+    }
+    
+    public Integer getThanhTien() {
+        return thanhTien;
+    }
+    
+    public void setThanhTien(Integer thanhTien) {
+        this.thanhTien = thanhTien;
+    }
 }

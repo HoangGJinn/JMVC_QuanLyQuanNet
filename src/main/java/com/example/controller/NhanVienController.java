@@ -68,7 +68,29 @@ public class NhanVienController {
         } catch (Exception e) {
             // Log lỗi nếu cần
             e.printStackTrace();
-            return null; // Hoặc trả về danh sách rỗng
+            return new ArrayList<>(); // Hoặc trả về danh sách rỗng
+        }
+    }
+
+    /**
+     * Tìm nhân viên theo mã nhân viên
+     * @param maNV Mã nhân viên cần tìm
+     * @return Đối tượng NhanVien nếu tìm thấy, null nếu không tìm thấy
+     */
+    public NhanVien timNhanVienTheoMa(String maNV) {
+        try {
+            List<NhanVien> dsNhanVien = nhanVienDAO.timNhanVien(maNV);
+            if (dsNhanVien != null && !dsNhanVien.isEmpty()) {
+                for (NhanVien nv : dsNhanVien) {
+                    if (nv.getMaNV().equals(maNV)) {
+                        return nv;
+                    }
+                }
+            }
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
