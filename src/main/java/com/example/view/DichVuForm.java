@@ -4,7 +4,6 @@ import com.example.controller.DichVuController;
 import com.example.model.DvDoAn;
 import com.example.model.DvDoUong;
 import com.example.model.DvTheCao;
-
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.EmptyBorder;
@@ -197,12 +196,12 @@ public class DichVuForm extends JFrame {
         lblFoodName.setPreferredSize(new Dimension(75, 25));
         lblFoodName.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        txtFoodName = createRoundTextField("Nhập tên đồ ăn", 25);
+        txtFoodName = createRoundTextField("Nhập tên đồ ăn", 20);
         
         nameRow.add(lblFoodName, BorderLayout.WEST);
         nameRow.add(txtFoodName, BorderLayout.CENTER);
         
-        // Price and best seller row
+        // Price row - remove bestseller checkbox
         JPanel priceRow = new JPanel(new BorderLayout(8, 0));
         priceRow.setOpaque(false);
         
@@ -210,20 +209,10 @@ public class DichVuForm extends JFrame {
         lblFoodPrice.setFont(new Font("HarmonyOS Sans", Font.PLAIN, 13));
         lblFoodPrice.setPreferredSize(new Dimension(75, 25));
         
-        JPanel priceFieldPanel = new JPanel(new BorderLayout(5, 0));
-        priceFieldPanel.setOpaque(false);
-        
-        txtFoodPrice = createRoundTextField("Nhập đơn giá", 15);
-        
-        chkFoodBestSeller = new JCheckBox("Best seller");
-        chkFoodBestSeller.setOpaque(false);
-        chkFoodBestSeller.setFont(new Font("HarmonyOS Sans", Font.PLAIN, 13));
-        
-        priceFieldPanel.add(txtFoodPrice, BorderLayout.CENTER);
-        priceFieldPanel.add(chkFoodBestSeller, BorderLayout.EAST);
+        txtFoodPrice = createRoundTextField("Nhập đơn giá", 20);
         
         priceRow.add(lblFoodPrice, BorderLayout.WEST);
-        priceRow.add(priceFieldPanel, BorderLayout.CENTER);
+        priceRow.add(txtFoodPrice, BorderLayout.CENTER);
         
         // Image row
         JPanel imageRow = new JPanel(new BorderLayout(8, 0));
@@ -325,6 +314,15 @@ public class DichVuForm extends JFrame {
         buttonsPanel.add(Box.createRigidArea(new Dimension(0, 8)));
         buttonsPanel.add(btnCancelFood);
         
+        // Add bestseller checkbox below the buttons
+        chkFoodBestSeller = new JCheckBox("Best seller");
+        chkFoodBestSeller.setOpaque(false);
+        chkFoodBestSeller.setFont(new Font("HarmonyOS Sans", Font.PLAIN, 13));
+        chkFoodBestSeller.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        buttonsPanel.add(Box.createRigidArea(new Dimension(0, 8)));
+        buttonsPanel.add(chkFoodBestSeller);
+        
         // Add all components to the form panel
         formPanel.add(fieldsPanel, BorderLayout.CENTER);
         formPanel.add(buttonsPanel, BorderLayout.EAST);
@@ -421,12 +419,12 @@ public class DichVuForm extends JFrame {
         lblDrinkName.setPreferredSize(new Dimension(80, 25));
         lblDrinkName.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        txtDrinkName = createRoundTextField("Nhập tên đồ uống", 25);
+        txtDrinkName = createRoundTextField("Nhập tên đồ uống", 20);
         
         nameRow.add(lblDrinkName, BorderLayout.WEST);
         nameRow.add(txtDrinkName, BorderLayout.CENTER);
         
-        // Price and best seller row
+        // Price row - remove bestseller checkbox
         JPanel priceRow = new JPanel(new BorderLayout(8, 0));
         priceRow.setOpaque(false);
         
@@ -434,20 +432,10 @@ public class DichVuForm extends JFrame {
         lblDrinkPrice.setFont(new Font("HarmonyOS Sans", Font.PLAIN, 13));
         lblDrinkPrice.setPreferredSize(new Dimension(80, 25));
         
-        JPanel priceFieldPanel = new JPanel(new BorderLayout(5, 0));
-        priceFieldPanel.setOpaque(false);
-        
-        txtDrinkPrice = createRoundTextField("Nhập đơn giá", 15);
-        
-        chkDrinkBestSeller = new JCheckBox("Best seller");
-        chkDrinkBestSeller.setOpaque(false);
-        chkDrinkBestSeller.setFont(new Font("HarmonyOS Sans", Font.PLAIN, 13));
-        
-        priceFieldPanel.add(txtDrinkPrice, BorderLayout.CENTER);
-        priceFieldPanel.add(chkDrinkBestSeller, BorderLayout.EAST);
+        txtDrinkPrice = createRoundTextField("Nhập đơn giá", 20);
         
         priceRow.add(lblDrinkPrice, BorderLayout.WEST);
-        priceRow.add(priceFieldPanel, BorderLayout.CENTER);
+        priceRow.add(txtDrinkPrice, BorderLayout.CENTER);
         
         // Image row
         JPanel imageRow = new JPanel(new BorderLayout(8, 0));
@@ -548,6 +536,15 @@ public class DichVuForm extends JFrame {
         buttonsPanel.add(btnDeleteDrink);
         buttonsPanel.add(Box.createRigidArea(new Dimension(0, 8)));
         buttonsPanel.add(btnCancelDrink);
+        
+        // Add bestseller checkbox below the buttons
+        chkDrinkBestSeller = new JCheckBox("Best seller");
+        chkDrinkBestSeller.setOpaque(false);
+        chkDrinkBestSeller.setFont(new Font("HarmonyOS Sans", Font.PLAIN, 13));
+        chkDrinkBestSeller.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        buttonsPanel.add(Box.createRigidArea(new Dimension(0, 8)));
+        buttonsPanel.add(chkDrinkBestSeller);
         
         // Add all components to the form panel
         formPanel.add(fieldsPanel, BorderLayout.CENTER);
