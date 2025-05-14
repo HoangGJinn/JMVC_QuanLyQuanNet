@@ -1,18 +1,20 @@
 package com.example.model;
 
+import java.util.Date;
+
 public class MayTinh {
     private String soMay;
     private String trangThai;
-    private java.util.Date ngayLapDat;
+    private Date ngayLapDat;
     private int maLoaiMay;
-    private LoaiMay loaiMay;
-    private java.util.Set<ChiTietSuDung> chiTietSuDungs;
 
-    public MayTinh() {
-        this.chiTietSuDungs = new java.util.HashSet<>();
+    public MayTinh(String soMay, String trangThai, Date ngayLapDat, int maLoaiMay) {
+        this.soMay = soMay;
+        this.trangThai = trangThai;
+        this.ngayLapDat = ngayLapDat;
+        this.maLoaiMay = maLoaiMay;
     }
 
-    // Getters and setters
     public String getSoMay() {
         return soMay;
     }
@@ -29,11 +31,11 @@ public class MayTinh {
         this.trangThai = trangThai;
     }
 
-    public java.util.Date getNgayLapDat() {
+    public Date getNgayLapDat() {
         return ngayLapDat;
     }
 
-    public void setNgayLapDat(java.util.Date ngayLapDat) {
+    public void setNgayLapDat(Date ngayLapDat) {
         this.ngayLapDat = ngayLapDat;
     }
 
@@ -43,21 +45,5 @@ public class MayTinh {
 
     public void setMaLoaiMay(int maLoaiMay) {
         this.maLoaiMay = maLoaiMay;
-    }
-
-    public LoaiMay getLoaiMay() {
-        return loaiMay;
-    }
-
-    public void setLoaiMay(LoaiMay loaiMay) {
-        this.loaiMay = loaiMay;
-    }
-
-    public java.util.Set<ChiTietSuDung> getChiTietSuDungs() {
-        return chiTietSuDungs;
-    }
-
-    public void setChiTietSuDungs(java.util.Set<ChiTietSuDung> chiTietSuDungs) {
-        this.chiTietSuDungs = chiTietSuDungs;
     }
 }

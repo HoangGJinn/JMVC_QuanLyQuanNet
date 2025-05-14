@@ -3,9 +3,7 @@ package com.example.model;
 public class LoaiKM {
     private int maLoai;
     private String tenLoai;
-    
-    public LoaiKM() {
-    }
+
     
     public LoaiKM(int maLoai, String tenLoai) {
         this.maLoai = maLoai;
