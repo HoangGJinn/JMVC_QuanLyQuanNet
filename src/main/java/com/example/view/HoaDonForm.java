@@ -36,13 +36,24 @@ public class HoaDonForm extends JFrame {
     
     // Controller
     private HoaDonController hoaDonController;
+    
+    // For embedding in MenuForm
+    private boolean isEmbedded = false;
 
     public HoaDonForm() {
+        this(false);
+    }
+    
+    public HoaDonForm(boolean isEmbedded) {
+        this.isEmbedded = isEmbedded;
+        
         setTitle("Quản Lý Hóa Đơn");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(1000, 653);
-        setResizable(false);
-        setLocationRelativeTo(null);
+        if (!isEmbedded) {
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            setSize(1000, 653);
+            setResizable(false);
+            setLocationRelativeTo(null);
+        }
         
         // Initialize controller
         hoaDonController = new HoaDonController();
@@ -50,6 +61,14 @@ public class HoaDonForm extends JFrame {
         initComponents();
         setupEventListeners();
         loadHoaDonData();
+        
+        if (!isEmbedded) {
+            setVisible(true);
+        }
+    }
+    
+    public Container getContent() {
+        return contentPane;
     }
 
     private void initComponents() {

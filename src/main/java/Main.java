@@ -37,6 +37,5 @@ public class Main {
         MenuForm menuForm = new MenuForm();
         menuForm.setVisible(true);
 
-        // Hiển thị form quản lý loại máy
     }
 }
