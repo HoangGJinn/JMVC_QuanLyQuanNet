@@ -1,10 +1,10 @@
 package com.example.view;
 
-import com.example.dao.DoanhThuDAO;
-import com.example.dao.DichVuDAO;
-import com.example.dao.MayTinhDAO;
-import com.example.dao.KhuyenMaiDAO;
-import com.example.dao.TaiKhoanDAO;
+import com.example.controller.DoanhThuController;
+import com.example.controller.DichVuController;
+import com.example.controller.MayTinhController;
+import com.example.controller.KhuyenMaiController;
+import com.example.controller.TaiKhoanController;
 import com.example.dao.DichVuDAO.TopItem;
 import com.example.model.MayTinh;
 import com.example.util.UIStyler;
@@ -30,12 +30,12 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class ThongKeForm extends JFrame {
-    // DAO instances
-    private TaiKhoanDAO dbtk;
-    private MayTinhDAO dbmt;
-    private KhuyenMaiDAO dbkm;
-    private DichVuDAO dbdv;
-    private DoanhThuDAO dbdt;
+    // Controller instances
+    private TaiKhoanController dbtk;
+    private MayTinhController dbmt;
+    private KhuyenMaiController dbkm;
+    private DichVuController dbdv;
+    private DoanhThuController dbdt;
     private int currentYear;
     private int currentMonth;
 
@@ -143,15 +143,15 @@ public class ThongKeForm extends JFrame {
     public ThongKeForm(boolean isEmbedded) {
         this.isEmbedded = isEmbedded;
 
-        // Initialize DAO instances
+        // Initialize controller instances
         currentYear = Calendar.getInstance().get(Calendar.YEAR);
         currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1; // Calendar months are 0-based
         try {
-            dbdt = DoanhThuDAO.getInstance();
-            dbdv = DichVuDAO.getInstance();
-            dbmt = MayTinhDAO.getInstance();
-            dbkm = KhuyenMaiDAO.getInstance();
-            dbtk = TaiKhoanDAO.getInstance();
+            dbdt = new DoanhThuController();
+            dbdv = new DichVuController();
+            dbmt = new MayTinhController();
+            dbkm = new KhuyenMaiController();
+            dbtk = new TaiKhoanController();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error initializing data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -926,45 +926,25 @@ public class ThongKeForm extends JFrame {
             // Load computer data
             int activeComputers = dbmt.tinhTongMayHD();
             int totalComputers = 0;
-            try {
-                totalComputers = dbmt.layDsMayTinh().size();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            totalComputers = dbmt.layDsMayTinh().size();
             computerCountLabel.setText(activeComputers + "/" + totalComputers);
 
             // Load account data
             int totalAccounts = 0;
-            try {
-                totalAccounts = dbtk.layDsTaiKhoan().size();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            totalAccounts = dbtk.getDanhSachTaiKhoan().size();
             accountCountLabel.setText(String.valueOf(totalAccounts));
 
             int newAccounts = 0;
-            try {
-                newAccounts = dbtk.tinhTkMoi();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            newAccounts = dbtk.TinhTkMoi();
             accountTrendLabel.setText(newAccounts + " tài khoản mới tháng này");
 
             // Load promotion data
             int activePromotions = 0;
-            try {
-                activePromotions = dbkm.SoKMKhaDung();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            activePromotions = dbkm.soKhuyenMaiKhaDung();
             promotionCountLabel.setText(activePromotions + " khuyến mãi đang diễn ra");
 
             int expiringPromotions = 0;
-            try {
-                expiringPromotions = dbkm.SoKhuyenMaiSapHetHan(3);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            expiringPromotions = dbkm.soKhuyenMaiSapHetHan(3);
             promotionExpiringLabel.setText(expiringPromotions + " khuyến mãi sắp hết hạn");
 
             // Load top and bottom services
@@ -994,9 +974,9 @@ public class ThongKeForm extends JFrame {
             // Load data based on service type
             List<TopItem> topItems;
             if ("Đồ ăn".equals(serviceType)) {
-                topItems = dbdv.layTop5DA();
+                topItems = dbdv.layTop5DoAnBanChay();
             } else {
-                topItems = dbdv.layTop5DU();
+                topItems = dbdv.layTop5DoUongBanChay();
             }
 
             // Add data to table
@@ -1020,9 +1000,9 @@ public class ThongKeForm extends JFrame {
             // Load data based on service type
             List<TopItem> bottomItems;
             if ("Đồ ăn".equals(serviceType)) {
-                bottomItems = dbdv.layTop5DAIt();
+                bottomItems = dbdv.layTop5DoAnBanIt();
             } else {
-                bottomItems = dbdv.layTop5DUIt();
+                bottomItems = dbdv.layTop5DoUongBanIt();
             }
 
             // Add data to table
