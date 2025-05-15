@@ -213,7 +213,8 @@ public class KhuyenMaiDAO {
 
     public int SoKhuyenMaiSapHetHan(int soNgay) {
         int count = 0;
-        String sql = "SELECT fn_SoKhuyenMaiSapHetHan (?)";
+        // Use direct SQL query instead of function call
+        String sql = "SELECT COUNT(*) FROM KHUYENMAI WHERE DATEDIFF(day, GETDATE(), ThoiGianKetThuc) <= ? AND DATEDIFF(day, GETDATE(), ThoiGianKetThuc) >= 0";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, soNgay);
@@ -234,7 +235,8 @@ public class KhuyenMaiDAO {
 
     public int SoKMKhaDung() {
         int count = 0;
-        String sql = "SELECT * FROM fn_SoKhuyenMaiConHan ()";
+        // Use direct SQL query instead of function call
+        String sql = "SELECT COUNT(*) FROM KHUYENMAI WHERE GETDATE() BETWEEN ThoiGianBatDau AND ThoiGianKetThuc";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
 

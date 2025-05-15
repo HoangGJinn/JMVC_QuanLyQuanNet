@@ -65,7 +65,7 @@ public class TaiKhoanDAO {
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             // Nếu mật khẩu rỗng, truyền NULL thay vì giá trị rỗng
             if (matKhau == null || matKhau.isEmpty()) {
-                stmt.setNull(2, java.sql.Types.VARCHAR);  // Mật khẩu có thể là NULL nếu không có giá trị
+                stmt.setNull(2, Types.VARCHAR);  // Mật khẩu có thể là NULL nếu không có giá trị
             } else {
                 stmt.setString(2, matKhau);  // Nếu có mật khẩu, truyền vào tham số thứ hai
             }

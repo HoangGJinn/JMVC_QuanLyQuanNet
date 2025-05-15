@@ -69,7 +69,7 @@ public class MayTinhDAO {
     }
 
     // Thêm máy tính
-    public boolean themMayTinh(java.sql.Date ngayLapDat, int maLoaiMay) throws SQLException {
+    public boolean themMayTinh(Date ngayLapDat, int maLoaiMay) throws SQLException {
         String sql = "EXEC proc_themMayTinh ?, ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setDate(1, ngayLapDat);

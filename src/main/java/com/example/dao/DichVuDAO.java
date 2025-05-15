@@ -193,10 +193,27 @@ public class DichVuDAO {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                TopItem item = new TopItem(
-                        rs.getString("TenDoAn"),
-                        rs.getInt("SoLuong")
-                );
+                String tenDoAn = rs.getString("TenDoAn");
+                int soLuong = 0;
+
+                // Try different possible column names for quantity
+                try {
+                    soLuong = rs.getInt("SoLuong");
+                } catch (SQLException e1) {
+                    try {
+                        soLuong = rs.getInt("TongSoLuongBan");
+                    } catch (SQLException e2) {
+                        // If both column names fail, get the second column (assuming it's the quantity)
+                        try {
+                            soLuong = rs.getInt(2);
+                        } catch (SQLException e3) {
+                            // If all attempts fail, use 0 as default
+                            System.err.println("Could not find quantity column for food item: " + tenDoAn);
+                        }
+                    }
+                }
+
+                TopItem item = new TopItem(tenDoAn, soLuong);
                 result.add(item);
             }
         } catch (SQLException e) {
@@ -214,10 +231,27 @@ public class DichVuDAO {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                TopItem item = new TopItem(
-                        rs.getString("TenDoAn"),
-                        rs.getInt("SoLuong")
-                );
+                String tenDoAn = rs.getString("TenDoAn");
+                int soLuong = 0;
+
+                // Try different possible column names for quantity
+                try {
+                    soLuong = rs.getInt("SoLuong");
+                } catch (SQLException e1) {
+                    try {
+                        soLuong = rs.getInt("TongSoLuongBan");
+                    } catch (SQLException e2) {
+                        // If both column names fail, get the second column (assuming it's the quantity)
+                        try {
+                            soLuong = rs.getInt(2);
+                        } catch (SQLException e3) {
+                            // If all attempts fail, use 0 as default
+                            System.err.println("Could not find quantity column for food item: " + tenDoAn);
+                        }
+                    }
+                }
+
+                TopItem item = new TopItem(tenDoAn, soLuong);
                 result.add(item);
             }
         } catch (SQLException e) {
@@ -311,10 +345,27 @@ public class DichVuDAO {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                TopItem item = new TopItem(
-                        rs.getString("TenDoUong"),
-                        rs.getInt("SoLuong")
-                );
+                String tenDoUong = rs.getString("TenDoUong");
+                int soLuong = 0;
+
+                // Try different possible column names for quantity
+                try {
+                    soLuong = rs.getInt("SoLuong");
+                } catch (SQLException e1) {
+                    try {
+                        soLuong = rs.getInt("TongSoLuongBan");
+                    } catch (SQLException e2) {
+                        // If both column names fail, get the second column (assuming it's the quantity)
+                        try {
+                            soLuong = rs.getInt(2);
+                        } catch (SQLException e3) {
+                            // If all attempts fail, use 0 as default
+                            System.err.println("Could not find quantity column for beverage item: " + tenDoUong);
+                        }
+                    }
+                }
+
+                TopItem item = new TopItem(tenDoUong, soLuong);
                 result.add(item);
             }
         } catch (SQLException e) {
@@ -332,10 +383,27 @@ public class DichVuDAO {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                TopItem item = new TopItem(
-                        rs.getString("TenDoUong"),
-                        rs.getInt("SoLuong")
-                );
+                String tenDoUong = rs.getString("TenDoUong");
+                int soLuong = 0;
+
+                // Try different possible column names for quantity
+                try {
+                    soLuong = rs.getInt("SoLuong");
+                } catch (SQLException e1) {
+                    try {
+                        soLuong = rs.getInt("TongSoLuongBan");
+                    } catch (SQLException e2) {
+                        // If both column names fail, get the second column (assuming it's the quantity)
+                        try {
+                            soLuong = rs.getInt(2);
+                        } catch (SQLException e3) {
+                            // If all attempts fail, use 0 as default
+                            System.err.println("Could not find quantity column for beverage item: " + tenDoUong);
+                        }
+                    }
+                }
+
+                TopItem item = new TopItem(tenDoUong, soLuong);
                 result.add(item);
             }
         } catch (SQLException e) {
@@ -374,7 +442,7 @@ public class DichVuDAO {
             conn = DatabaseConnection.getInstance();
             return;
         }
-        
+
         try {
             if (conn.isClosed()) {
                 conn = DatabaseConnection.getInstance();
@@ -405,7 +473,7 @@ public class DichVuDAO {
             return soLuong;
         }
     }
-    
+
     /**
      * Lấy tên dịch vụ dựa vào mã dịch vụ
      * @param maDV Mã dịch vụ cần tìm
@@ -426,21 +494,21 @@ public class DichVuDAO {
                         } catch (SQLException e) {
                             // Cột không tồn tại, thử cột khác
                         }
-                        
+
                         try {
                             ten = rs.getString("TenDoAn");
                             if (ten != null && !ten.isEmpty()) return ten;
                         } catch (SQLException e) {
                             // Cột không tồn tại, thử cột khác
                         }
-                        
+
                         try {
                             ten = rs.getString("TenDoUong");
                             if (ten != null && !ten.isEmpty()) return ten;
                         } catch (SQLException e) {
                             // Cột không tồn tại, thử cột khác
                         }
-                        
+
                         try {
                             ten = rs.getString("LoaiThe");
                             if (ten != null && !ten.isEmpty()) return "Thẻ " + ten;
@@ -450,14 +518,14 @@ public class DichVuDAO {
                     }
                 }
             }
-            
+
             // Thử tìm trong các bảng cụ thể nếu view không có kết quả
             String[] queries = {
                 "SELECT TenDoAn AS Ten FROM View_DichVuDoAn WHERE MaDV = ?",
                 "SELECT TenDoUong AS Ten FROM View_DichVuDoUong WHERE MaDV = ?",
                 "SELECT LoaiThe AS Ten FROM View_DichVuTheCao WHERE MaDV = ?"
             };
-            
+
             for (String query : queries) {
                 try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                     pstmt.setString(1, maDV);
@@ -476,7 +544,7 @@ public class DichVuDAO {
                     // Bỏ qua lỗi và thử query tiếp theo
                 }
             }
-            
+
             // Trả về mã dịch vụ nếu không tìm thấy tên
             return maDV;
         } catch (Exception e) {

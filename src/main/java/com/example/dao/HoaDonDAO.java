@@ -90,25 +90,25 @@ public class HoaDonDAO {
                 if (batDau != null) {
                     stmt.setDate(1, new java.sql.Date(batDau.getTime()));
                 } else {
-                    stmt.setNull(1, java.sql.Types.DATE);
+                    stmt.setNull(1, Types.DATE);
                 }
 
                 if (ketThuc != null) {
                     stmt.setDate(2, new java.sql.Date(ketThuc.getTime()));
                 } else {
-                    stmt.setNull(2, java.sql.Types.DATE);
+                    stmt.setNull(2, Types.DATE);
                 }
 
                 if (loai != null && !loai.isEmpty()) {
                     stmt.setString(3, loai);
                 } else {
-                    stmt.setNull(3, java.sql.Types.VARCHAR);
+                    stmt.setNull(3, Types.VARCHAR);
                 }
 
                 if (maHD != null && !maHD.isEmpty()) {
                     stmt.setString(4, maHD);
                 } else {
-                    stmt.setNull(4, java.sql.Types.VARCHAR);
+                    stmt.setNull(4, Types.VARCHAR);
                 }
 
                 try (ResultSet rs = stmt.executeQuery()) {
@@ -150,7 +150,7 @@ public class HoaDonDAO {
                 if (maKM != null && !maKM.isEmpty()) {
                     stmt.setString(6, maKM);
                 } else {
-                    stmt.setNull(6, java.sql.Types.VARCHAR);
+                    stmt.setNull(6, Types.VARCHAR);
                 }
 
                 stmt.executeUpdate();
@@ -188,14 +188,14 @@ public class HoaDonDAO {
         try {
             String sql = "{? = call proc_TaoHoaDonDichVu(?, ?, ?, ?)}";
             try (CallableStatement cstmt = conn.prepareCall(sql)) {
-                cstmt.registerOutParameter(1, java.sql.Types.VARCHAR);
+                cstmt.registerOutParameter(1, Types.VARCHAR);
                 cstmt.setString(2, phuongThucTT);
                 cstmt.setInt(3, maNV);
 
                 if (maKM != null && !maKM.isEmpty()) {
                     cstmt.setString(4, maKM);
                 } else {
-                    cstmt.setNull(4, java.sql.Types.VARCHAR);
+                    cstmt.setNull(4, Types.VARCHAR);
                 }
 
                 cstmt.setInt(5, tongThanhToan);

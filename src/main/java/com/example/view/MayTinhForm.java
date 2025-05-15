@@ -944,5 +944,6 @@ public class MayTinhForm extends JFrame {
             e.printStackTrace();
         }
         SwingUtilities.invokeLater(MayTinhForm::new);
+
     }
 }

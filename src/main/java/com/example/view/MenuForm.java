@@ -292,7 +292,9 @@ public class MenuForm extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 setActivePanel(btnThongKe);
                 lblTitle.setText("Thống Kê");
-                showWelcomeMessage("Chức năng Thống Kê đang được phát triển");
+                //showWelcomeMessage("Chức năng Thống Kê đang được phát triển");
+                openChildForm(new ThongKeForm(true));
+
             }
         });
         
@@ -386,6 +388,11 @@ public class MenuForm extends JFrame {
                 childForm.setVisible(false);
                 // Use the getContent method we added to DichVuForm
                 Container content = ((DichVuForm)childForm).getContent();
+                mainContentPanel.add(content, BorderLayout.CENTER);
+            }
+            else if (childForm instanceof ThongKeForm) {
+                childForm.setVisible(false);
+                Container content = ((ThongKeForm)childForm).getContent();
                 mainContentPanel.add(content, BorderLayout.CENTER);
             }
             else {
