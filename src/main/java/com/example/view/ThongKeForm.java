@@ -1,12 +1,13 @@
 package com.example.view;
 
-import com.example.dao.DoanhThuDAO;
-import com.example.dao.DichVuDAO;
-import com.example.dao.MayTinhDAO;
-import com.example.dao.KhuyenMaiDAO;
-import com.example.dao.TaiKhoanDAO;
+import com.example.controller.DoanhThuController;
+import com.example.controller.DichVuController;
+import com.example.controller.MayTinhController;
+import com.example.controller.KhuyenMaiController;
+import com.example.controller.TaiKhoanController;
 import com.example.dao.DichVuDAO.TopItem;
 import com.example.model.MayTinh;
+import com.example.util.UIStyler;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,6 +17,7 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -28,12 +30,12 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class ThongKeForm extends JFrame {
-    // DAO instances
-    private TaiKhoanDAO dbtk;
-    private MayTinhDAO dbmt;
-    private KhuyenMaiDAO dbkm;
-    private DichVuDAO dbdv;
-    private DoanhThuDAO dbdt;
+    // Controller instances
+    private TaiKhoanController dbtk;
+    private MayTinhController dbmt;
+    private KhuyenMaiController dbkm;
+    private DichVuController dbdv;
+    private DoanhThuController dbdt;
     private int currentYear;
     private int currentMonth;
 
@@ -141,15 +143,15 @@ public class ThongKeForm extends JFrame {
     public ThongKeForm(boolean isEmbedded) {
         this.isEmbedded = isEmbedded;
 
-        // Initialize DAO instances
+        // Initialize controller instances
         currentYear = Calendar.getInstance().get(Calendar.YEAR);
         currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1; // Calendar months are 0-based
         try {
-            dbdt = DoanhThuDAO.getInstance();
-            dbdv = DichVuDAO.getInstance();
-            dbmt = MayTinhDAO.getInstance();
-            dbkm = KhuyenMaiDAO.getInstance();
-            dbtk = TaiKhoanDAO.getInstance();
+            dbdt = new DoanhThuController();
+            dbdv = new DichVuController();
+            dbmt = new MayTinhController();
+            dbkm = new KhuyenMaiController();
+            dbtk = new TaiKhoanController();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error initializing data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -275,27 +277,35 @@ public class ThongKeForm extends JFrame {
     }
 
     private void initRevenuePanel() {
-        revenuePanel = new JPanel(new BorderLayout());
+        // Create a rounded panel with shadow effect
+        revenuePanel = UIStyler.createCardPanel(UIStyler.PANEL_RADIUS);
         revenuePanel.setPreferredSize(new Dimension(280, 120));
-        revenuePanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-        revenuePanel.setBackground(Color.WHITE);
+        revenuePanel.setLayout(new BorderLayout());
 
-        JPanel contentPanel = new JPanel(new GridLayout(3, 1));
-        contentPanel.setBackground(Color.WHITE);
+        // Add a subtle gradient background
+        revenuePanel.setBackground(UIStyler.ACCENT_COLOR_SECONDARY);
+
+        JPanel contentPanel = new JPanel(new GridLayout(3, 1, 0, 5));
+        contentPanel.setBackground(UIStyler.ACCENT_COLOR_SECONDARY);
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 
         revenueTitleLabel = new JLabel("Doanh thu tháng này");
-        revenueTitleLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        UIStyler.styleSubtitleLabel(revenueTitleLabel);
+        revenueTitleLabel.setForeground(Color.WHITE);
 
         revenueLabel = new JLabel("0đ");
         revenueLabel.setName("dtLabel");
-        revenueLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        revenueLabel.setFont(new Font(UIStyler.TITLE_FONT.getFamily(), Font.BOLD, 22));
+        revenueLabel.setForeground(Color.WHITE);
 
         revenueTrendLabel = new JLabel("Tăng 0% so với tháng trước");
         revenueTrendLabel.setName("dtTang");
+        revenueTrendLabel.setFont(UIStyler.LABEL_FONT);
+        revenueTrendLabel.setForeground(Color.WHITE);
 
-        // Create a panel for the trend icon
+        // Create a panel for the trend icon with transparent background
         JPanel trendPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        trendPanel.setBackground(Color.WHITE);
+        trendPanel.setOpaque(false);
 
         revenueTrendIconLabel = new JLabel(); // This would be set with an up/down icon
         revenueTrendIconLabel.setName("dtPic");
@@ -310,20 +320,26 @@ public class ThongKeForm extends JFrame {
     }
 
     private void initComputerPanel() {
-        computerPanel = new JPanel(new BorderLayout());
+        // Create a rounded panel with shadow effect
+        computerPanel = UIStyler.createCardPanel(UIStyler.PANEL_RADIUS);
         computerPanel.setPreferredSize(new Dimension(280, 120));
-        computerPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-        computerPanel.setBackground(Color.WHITE);
+        computerPanel.setLayout(new BorderLayout());
 
-        JPanel contentPanel = new JPanel(new GridLayout(2, 1));
-        contentPanel.setBackground(Color.WHITE);
+        // Use a different accent color for variety
+        computerPanel.setBackground(UIStyler.SUCCESS_COLOR);
+
+        JPanel contentPanel = new JPanel(new GridLayout(2, 1, 0, 10));
+        contentPanel.setBackground(UIStyler.SUCCESS_COLOR);
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
         computerTitleLabel = new JLabel("Số máy đang hoạt động");
-        computerTitleLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        UIStyler.styleSubtitleLabel(computerTitleLabel);
+        computerTitleLabel.setForeground(Color.WHITE);
 
         computerCountLabel = new JLabel("0/0");
         computerCountLabel.setName("soMayHDLabel");
-        computerCountLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        computerCountLabel.setFont(new Font(UIStyler.TITLE_FONT.getFamily(), Font.BOLD, 24));
+        computerCountLabel.setForeground(Color.WHITE);
 
         contentPanel.add(computerTitleLabel);
         contentPanel.add(computerCountLabel);
@@ -332,23 +348,31 @@ public class ThongKeForm extends JFrame {
     }
 
     private void initAccountPanel() {
-        accountPanel = new JPanel(new BorderLayout());
+        // Create a rounded panel with shadow effect
+        accountPanel = UIStyler.createCardPanel(UIStyler.PANEL_RADIUS);
         accountPanel.setPreferredSize(new Dimension(280, 120));
-        accountPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-        accountPanel.setBackground(Color.WHITE);
+        accountPanel.setLayout(new BorderLayout());
 
-        JPanel contentPanel = new JPanel(new GridLayout(3, 1));
-        contentPanel.setBackground(Color.WHITE);
+        // Use a different accent color for variety
+        accountPanel.setBackground(UIStyler.ACCENT_COLOR);
+
+        JPanel contentPanel = new JPanel(new GridLayout(3, 1, 0, 5));
+        contentPanel.setBackground(UIStyler.ACCENT_COLOR);
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 
         accountTitleLabel = new JLabel("Tổng số tài khoản");
-        accountTitleLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        UIStyler.styleSubtitleLabel(accountTitleLabel);
+        accountTitleLabel.setForeground(Color.WHITE);
 
         accountCountLabel = new JLabel("0");
         accountCountLabel.setName("tongTkLabel");
-        accountCountLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        accountCountLabel.setFont(new Font(UIStyler.TITLE_FONT.getFamily(), Font.BOLD, 22));
+        accountCountLabel.setForeground(Color.WHITE);
 
         accountTrendLabel = new JLabel("0 tài khoản mới tháng này");
         accountTrendLabel.setName("tkTang");
+        accountTrendLabel.setFont(UIStyler.LABEL_FONT);
+        accountTrendLabel.setForeground(Color.WHITE);
 
         contentPanel.add(accountTitleLabel);
         contentPanel.add(accountCountLabel);
@@ -358,23 +382,31 @@ public class ThongKeForm extends JFrame {
     }
 
     private void initPromotionPanel() {
-        promotionPanel = new JPanel(new BorderLayout());
+        // Create a rounded panel with shadow effect
+        promotionPanel = UIStyler.createCardPanel(UIStyler.PANEL_RADIUS);
         promotionPanel.setPreferredSize(new Dimension(280, 120));
-        promotionPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-        promotionPanel.setBackground(Color.WHITE);
+        promotionPanel.setLayout(new BorderLayout());
 
-        JPanel contentPanel = new JPanel(new GridLayout(3, 1));
-        contentPanel.setBackground(Color.WHITE);
+        // Use a different accent color for variety
+        promotionPanel.setBackground(UIStyler.WARNING_COLOR);
+
+        JPanel contentPanel = new JPanel(new GridLayout(3, 1, 0, 5));
+        contentPanel.setBackground(UIStyler.WARNING_COLOR);
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 
         promotionTitleLabel = new JLabel("Khuyến mãi");
-        promotionTitleLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        UIStyler.styleSubtitleLabel(promotionTitleLabel);
+        promotionTitleLabel.setForeground(Color.WHITE);
 
         promotionCountLabel = new JLabel("0 khuyến mãi đang diễn ra");
         promotionCountLabel.setName("soKmDangDienRa");
-        promotionCountLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        promotionCountLabel.setFont(new Font(UIStyler.TITLE_FONT.getFamily(), Font.BOLD, 18));
+        promotionCountLabel.setForeground(Color.WHITE);
 
         promotionExpiringLabel = new JLabel("0 khuyến mãi sắp hết hạn");
         promotionExpiringLabel.setName("kmSapHet");
+        promotionExpiringLabel.setFont(UIStyler.LABEL_FONT);
+        promotionExpiringLabel.setForeground(Color.WHITE);
 
         contentPanel.add(promotionTitleLabel);
         contentPanel.add(promotionCountLabel);
@@ -384,84 +416,149 @@ public class ThongKeForm extends JFrame {
     }
 
     private void initTopServicesPanel() {
-        topServicesPanel = new JPanel(new BorderLayout());
+        // Create a rounded panel with shadow effect
+        topServicesPanel = UIStyler.createCardPanel(UIStyler.PANEL_RADIUS);
         topServicesPanel.setPreferredSize(new Dimension(280, 250));
-        topServicesPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-        topServicesPanel.setBackground(Color.WHITE);
+        topServicesPanel.setLayout(new BorderLayout(0, 10));
 
-        JPanel headerPanel = new JPanel(new BorderLayout());
+        // Create a stylish header panel
+        JPanel headerPanel = new JPanel(new BorderLayout(10, 0));
         headerPanel.setBackground(Color.WHITE);
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         topServicesTitleLabel = new JLabel("Top 5 bán chạy nhất");
-        topServicesTitleLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        UIStyler.styleSubtitleLabel(topServicesTitleLabel);
+        topServicesTitleLabel.setForeground(UIStyler.ACCENT_COLOR);
 
         serviceTypeComboBox = new JComboBox<>(new String[]{"Đồ ăn", "Đồ uống"});
         serviceTypeComboBox.setName("dvCbBox");
+        UIStyler.styleComboBox(serviceTypeComboBox);
+        serviceTypeComboBox.setPreferredSize(new Dimension(120, 30));
         serviceTypeComboBox.addActionListener(e -> loadTopServices());
 
         headerPanel.add(topServicesTitleLabel, BorderLayout.WEST);
         headerPanel.add(serviceTypeComboBox, BorderLayout.EAST);
 
-        // Create table for top services
+        // Create table for top services with improved styling
         String[] columnNames = {"Tên dịch vụ", "Số lượng bán"};
         topServicesTableModel = new DefaultTableModel(columnNames, 0);
         topServicesTable = new JTable(topServicesTableModel);
         topServicesTable.setName("dgvTop5DESC");
-        topServicesTable.setRowHeight(25);
 
+        // Apply consistent styling to table
+        UIStyler.styleTable(topServicesTable);
+
+        // Create a custom renderer for the second column to highlight values
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, 
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(
+                        table, value, isSelected, hasFocus, row, column);
+
+                if (column == 1 && !isSelected) {
+                    setForeground(UIStyler.ACCENT_COLOR);
+                    setFont(new Font(UIStyler.TABLE_CELL_FONT.getFamily(), Font.BOLD, 14));
+                }
+                return c;
+            }
+        };
+        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+        topServicesTable.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
+
+        // Style the scroll pane
         JScrollPane scrollPane = new JScrollPane(topServicesTable);
+        UIStyler.styleScrollPane(scrollPane);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
         topServicesPanel.add(headerPanel, BorderLayout.NORTH);
         topServicesPanel.add(scrollPane, BorderLayout.CENTER);
     }
 
     private void initBottomServicesPanel() {
-        bottomServicesPanel = new JPanel(new BorderLayout());
+        // Create a rounded panel with shadow effect
+        bottomServicesPanel = UIStyler.createCardPanel(UIStyler.PANEL_RADIUS);
         bottomServicesPanel.setPreferredSize(new Dimension(280, 250));
-        bottomServicesPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-        bottomServicesPanel.setBackground(Color.WHITE);
+        bottomServicesPanel.setLayout(new BorderLayout(0, 10));
 
-        JPanel headerPanel = new JPanel(new BorderLayout());
+        // Create a stylish header panel
+        JPanel headerPanel = new JPanel(new BorderLayout(10, 0));
         headerPanel.setBackground(Color.WHITE);
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         bottomServicesTitleLabel = new JLabel("Top 5 bán ít nhất");
-        bottomServicesTitleLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        UIStyler.styleSubtitleLabel(bottomServicesTitleLabel);
+        bottomServicesTitleLabel.setForeground(UIStyler.ACCENT_COLOR);
 
         bottomServiceTypeComboBox = new JComboBox<>(new String[]{"Đồ ăn", "Đồ uống"});
         bottomServiceTypeComboBox.setName("dvCbBoxAsc");
+        UIStyler.styleComboBox(bottomServiceTypeComboBox);
+        bottomServiceTypeComboBox.setPreferredSize(new Dimension(120, 30));
         bottomServiceTypeComboBox.addActionListener(e -> loadBottomServices());
 
         headerPanel.add(bottomServicesTitleLabel, BorderLayout.WEST);
         headerPanel.add(bottomServiceTypeComboBox, BorderLayout.EAST);
 
-        // Create table for bottom services
+        // Create table for bottom services with improved styling
         String[] columnNames = {"Tên dịch vụ", "Số lượng bán"};
         bottomServicesTableModel = new DefaultTableModel(columnNames, 0);
         bottomServicesTable = new JTable(bottomServicesTableModel);
         bottomServicesTable.setName("dgvTop5ASC");
-        bottomServicesTable.setRowHeight(25);
 
+        // Apply consistent styling to table
+        UIStyler.styleTable(bottomServicesTable);
+
+        // Create a custom renderer for the second column to highlight values
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, 
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(
+                        table, value, isSelected, hasFocus, row, column);
+
+                if (column == 1 && !isSelected) {
+                    setForeground(UIStyler.WARNING_COLOR); // Use warning color for bottom services
+                    setFont(new Font(UIStyler.TABLE_CELL_FONT.getFamily(), Font.BOLD, 14));
+                }
+                return c;
+            }
+        };
+        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+        bottomServicesTable.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
+
+        // Style the scroll pane
         JScrollPane scrollPane = new JScrollPane(bottomServicesTable);
+        UIStyler.styleScrollPane(scrollPane);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
         bottomServicesPanel.add(headerPanel, BorderLayout.NORTH);
         bottomServicesPanel.add(scrollPane, BorderLayout.CENTER);
     }
 
     private void initChartPanel() {
-        chartPanel = new JPanel(new BorderLayout());
+        // Create a rounded panel with shadow effect
+        chartPanel = UIStyler.createCardPanel(UIStyler.PANEL_RADIUS);
         chartPanel.setPreferredSize(new Dimension(580, 300));
-        chartPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-        chartPanel.setBackground(Color.WHITE);
+        chartPanel.setLayout(new BorderLayout(0, 10));
+
+        // Create a stylish header panel
+        JPanel headerPanel = new JPanel(new BorderLayout(10, 0));
+        headerPanel.setBackground(Color.WHITE);
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 5, 15));
 
         chartTitleLabel = new JLabel("Biểu đồ doanh thu 12 tháng gần nhất");
-        chartTitleLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        UIStyler.styleSubtitleLabel(chartTitleLabel);
+        chartTitleLabel.setForeground(UIStyler.ACCENT_COLOR);
 
-        // Create a custom chart panel
+        // Create a custom chart panel with improved styling
         revenueChartPanel = new RevenueChartPanel();
         revenueChartPanel.setName("chart1");
         revenueChartPanel.setBackground(Color.WHITE);
+        revenueChartPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 15, 15));
 
-        chartPanel.add(chartTitleLabel, BorderLayout.NORTH);
+        headerPanel.add(chartTitleLabel, BorderLayout.WEST);
+
+        chartPanel.add(headerPanel, BorderLayout.NORTH);
         chartPanel.add(revenueChartPanel, BorderLayout.CENTER);
 
         // Load chart data
@@ -513,24 +610,47 @@ public class ThongKeForm extends JFrame {
             super.paintComponent(g);
             Graphics2D g2 = (Graphics2D) g;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
             int width = getWidth();
             int height = getHeight();
 
-            // Draw axes
-            g2.setColor(Color.BLACK);
+            // Draw background grid
+            g2.setColor(new Color(245, 245, 245));
+            for (int i = 1; i < 5; i++) {
+                int y = height - PADDING - (i * (height - 2 * PADDING) / 5);
+                g2.drawLine(PADDING, y, width - PADDING, y);
+            }
+
+            // Draw axes with softer color
+            g2.setColor(new Color(180, 180, 180));
+            g2.setStroke(new BasicStroke(1.5f));
             g2.drawLine(PADDING, height - PADDING, width - PADDING, height - PADDING); // X-axis
             g2.drawLine(PADDING, PADDING, PADDING, height - PADDING); // Y-axis
 
-            // Draw axis labels
-            g2.drawString("Tháng", width / 2, height - 5);
+            // Draw axis labels with UIStyler font
+            g2.setColor(UIStyler.ACCENT_COLOR);
+            g2.setFont(UIStyler.SUBTITLE_FONT);
+            FontMetrics titleMetrics = g2.getFontMetrics();
+            String xAxisLabel = "Tháng";
+            g2.drawString(xAxisLabel, width / 2 - titleMetrics.stringWidth(xAxisLabel) / 2, height - 5);
 
             // Rotate and draw Y-axis label
             g2.rotate(-Math.PI / 2);
-            g2.drawString("Doanh thu", -height / 2, 15);
+            String yAxisLabel = "Doanh thu";
+            g2.drawString(yAxisLabel, -height / 2 - titleMetrics.stringWidth(yAxisLabel) / 2, 15);
             g2.rotate(Math.PI / 2);
 
             if (chartData.isEmpty()) {
+                // Draw a message if no data
+                g2.setColor(Color.GRAY);
+                g2.setFont(UIStyler.LABEL_FONT);
+                String noDataMsg = "Không có dữ liệu để hiển thị";
+                FontMetrics msgMetrics = g2.getFontMetrics();
+                g2.drawString(noDataMsg, 
+                    width / 2 - msgMetrics.stringWidth(noDataMsg) / 2, 
+                    height / 2);
                 return;
             }
 
@@ -545,6 +665,16 @@ public class ThongKeForm extends JFrame {
 
             // Calculate bar width and spacing
             int barWidth = (width - 2 * PADDING) / (chartData.size() + 1);
+            int actualBarWidth = Math.min(barWidth / 2, 40); // Limit max width
+
+            // Draw Y-axis labels (revenue values)
+            g2.setColor(new Color(100, 100, 100));
+            g2.setFont(new Font(UIStyler.LABEL_FONT.getFamily(), Font.PLAIN, 10));
+            for (int i = 0; i <= 5; i++) {
+                int value = maxRevenue * i / 5;
+                int y = height - PADDING - (i * (height - 2 * PADDING) / 5);
+                g2.drawString(formatPrice(value), 5, y + 5);
+            }
 
             // Draw data points
             int i = 0;
@@ -556,19 +686,43 @@ public class ThongKeForm extends JFrame {
                 int barHeight = (int) ((double) value / maxRevenue * (height - 2 * PADDING));
                 int y = height - PADDING - barHeight;
 
-                // Draw bar
-                g2.setColor(new Color(70, 130, 180));
-                g2.fillRect(x, y, barWidth / 2, barHeight);
+                // Create gradient for bar
+                GradientPaint gradient = new GradientPaint(
+                    x, y, UIStyler.ACCENT_COLOR,
+                    x, height - PADDING, new Color(
+                        UIStyler.ACCENT_COLOR.getRed(),
+                        UIStyler.ACCENT_COLOR.getGreen(),
+                        UIStyler.ACCENT_COLOR.getBlue(), 150)
+                );
+                g2.setPaint(gradient);
+
+                // Draw rounded bar
+                g2.fill(new RoundRectangle2D.Double(
+                    x - actualBarWidth / 2, y, 
+                    actualBarWidth, barHeight, 
+                    8, 8));
+
+                // Add subtle 3D effect with highlight
+                g2.setColor(new Color(255, 255, 255, 70));
+                g2.fill(new RoundRectangle2D.Double(
+                    x - actualBarWidth / 2, y, 
+                    actualBarWidth / 3, barHeight, 
+                    8, 0));
 
                 // Draw value above bar
-                g2.setColor(Color.BLACK);
+                g2.setColor(UIStyler.ACCENT_COLOR);
+                g2.setFont(new Font(UIStyler.LABEL_FONT.getFamily(), Font.BOLD, 11));
                 String valueStr = formatPrice(value);
                 FontMetrics metrics = g2.getFontMetrics();
                 int labelWidth = metrics.stringWidth(valueStr);
-                g2.drawString(valueStr, x - labelWidth / 2 + barWidth / 4, y - 5);
+                g2.drawString(valueStr, x - labelWidth / 2, y - 8);
 
                 // Draw x-axis label
-                g2.drawString(label, x - metrics.stringWidth(label) / 2 + barWidth / 4, height - PADDING + LABEL_PADDING + 10);
+                g2.setColor(new Color(80, 80, 80));
+                g2.setFont(new Font(UIStyler.LABEL_FONT.getFamily(), Font.PLAIN, 10));
+                metrics = g2.getFontMetrics();
+                g2.drawString(label, x - metrics.stringWidth(label) / 2, 
+                    height - PADDING + LABEL_PADDING + 10);
 
                 i++;
             }
@@ -576,31 +730,45 @@ public class ThongKeForm extends JFrame {
     }
 
     private void initStatsPanel() {
-        statsPanel = new JPanel(new BorderLayout());
+        // Create a rounded panel with shadow effect
+        statsPanel = UIStyler.createCardPanel(UIStyler.PANEL_RADIUS);
         statsPanel.setPreferredSize(new Dimension(580, 400));
-        statsPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-        statsPanel.setBackground(Color.WHITE);
+        statsPanel.setLayout(new BorderLayout(0, 10));
 
-        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        // Create a stylish header panel
+        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
         headerPanel.setBackground(Color.WHITE);
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
         JLabel yearLabel = new JLabel("Năm:");
+        UIStyler.styleLabel(yearLabel);
+        yearLabel.setForeground(new Color(80, 80, 80));
+
         yearComboBox = new JComboBox<>(new Integer[]{currentYear, currentYear - 1});
         yearComboBox.setName("namCbBox");
+        UIStyler.styleComboBox(yearComboBox);
+        yearComboBox.setPreferredSize(new Dimension(100, 30));
         yearComboBox.addActionListener(e -> updateMonthComboBox());
 
         JLabel monthLabel = new JLabel("Tháng:");
+        UIStyler.styleLabel(monthLabel);
+        monthLabel.setForeground(new Color(80, 80, 80));
+
         List<Integer> months = new ArrayList<>();
         for (int i = 1; i <= currentMonth; i++) {
             months.add(i);
         }
         monthComboBox = new JComboBox<>(months.toArray(new Integer[0]));
         monthComboBox.setName("thangCbBox");
+        UIStyler.styleComboBox(monthComboBox);
+        monthComboBox.setPreferredSize(new Dimension(100, 30));
         monthComboBox.addActionListener(e -> loadMonthlyStats());
 
         totalRevenueLabel = new JLabel("Tổng doanh thu: 0đ");
         totalRevenueLabel.setName("tongdt");
-        totalRevenueLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        totalRevenueLabel.setFont(new Font(UIStyler.TITLE_FONT.getFamily(), Font.BOLD, 16));
+        totalRevenueLabel.setForeground(UIStyler.ACCENT_COLOR);
+        totalRevenueLabel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
 
         headerPanel.add(yearLabel);
         headerPanel.add(yearComboBox);
@@ -758,45 +926,25 @@ public class ThongKeForm extends JFrame {
             // Load computer data
             int activeComputers = dbmt.tinhTongMayHD();
             int totalComputers = 0;
-            try {
-                totalComputers = dbmt.layDsMayTinh().size();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            totalComputers = dbmt.layDsMayTinh().size();
             computerCountLabel.setText(activeComputers + "/" + totalComputers);
 
             // Load account data
             int totalAccounts = 0;
-            try {
-                totalAccounts = dbtk.layDsTaiKhoan().size();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            totalAccounts = dbtk.getDanhSachTaiKhoan().size();
             accountCountLabel.setText(String.valueOf(totalAccounts));
 
             int newAccounts = 0;
-            try {
-                newAccounts = dbtk.tinhTkMoi();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            newAccounts = dbtk.TinhTkMoi();
             accountTrendLabel.setText(newAccounts + " tài khoản mới tháng này");
 
             // Load promotion data
             int activePromotions = 0;
-            try {
-                activePromotions = dbkm.SoKMKhaDung();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            activePromotions = dbkm.soKhuyenMaiKhaDung();
             promotionCountLabel.setText(activePromotions + " khuyến mãi đang diễn ra");
 
             int expiringPromotions = 0;
-            try {
-                expiringPromotions = dbkm.SoKhuyenMaiSapHetHan(3);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            expiringPromotions = dbkm.soKhuyenMaiSapHetHan(3);
             promotionExpiringLabel.setText(expiringPromotions + " khuyến mãi sắp hết hạn");
 
             // Load top and bottom services
@@ -826,9 +974,9 @@ public class ThongKeForm extends JFrame {
             // Load data based on service type
             List<TopItem> topItems;
             if ("Đồ ăn".equals(serviceType)) {
-                topItems = dbdv.layTop5DA();
+                topItems = dbdv.layTop5DoAnBanChay();
             } else {
-                topItems = dbdv.layTop5DU();
+                topItems = dbdv.layTop5DoUongBanChay();
             }
 
             // Add data to table
@@ -852,9 +1000,9 @@ public class ThongKeForm extends JFrame {
             // Load data based on service type
             List<TopItem> bottomItems;
             if ("Đồ ăn".equals(serviceType)) {
-                bottomItems = dbdv.layTop5DAIt();
+                bottomItems = dbdv.layTop5DoAnBanIt();
             } else {
-                bottomItems = dbdv.layTop5DUIt();
+                bottomItems = dbdv.layTop5DoUongBanIt();
             }
 
             // Add data to table

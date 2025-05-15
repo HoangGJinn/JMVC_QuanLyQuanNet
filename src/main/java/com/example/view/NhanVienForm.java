@@ -44,25 +44,49 @@ public class NhanVienForm extends JFrame {
         
         // Create main content panel
         mainContentPanel = new JPanel(new BorderLayout(10, 10));
+        mainContentPanel.setBackground(Color.WHITE);
 
         // ============ Top Panel ============
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        topPanel.setBackground(Color.WHITE);
+        
+        // Add "Thêm Mới" button with rounded corners and purple color
         JButton btnAdd = new JButton("Thêm Mới");
-
-        btnAdd.setBackground(new Color(112, 48, 160));
+        btnAdd.setBackground(new Color(112, 76, 240));
         btnAdd.setForeground(Color.WHITE);
         btnAdd.setFocusPainted(false);
         btnAdd.setFont(new Font("Arial", Font.BOLD, 14));
         btnAdd.setPreferredSize(new Dimension(120, 40));
+        btnAdd.setBorderPainted(false);
         btnAdd.addActionListener(e -> ClearForm());
-
-        JTextField searchField = new JTextField("Tìm kiếm");
-        searchField.addActionListener(e -> timKiem());
+        
+        // Search field with rounded look
+        JTextField searchField = new JTextField(15);
+        searchField.setText("Tìm kiếm");
+        searchField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.LIGHT_GRAY),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)));
         searchField.setPreferredSize(new Dimension(200, 30));
-
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
+        searchField.addActionListener(e -> timKiem());
+        
+        // Create a panel for search with icon
+        JPanel searchPanel = new JPanel(new BorderLayout());
+        searchPanel.setBackground(Color.WHITE);
+        searchPanel.add(searchField, BorderLayout.CENTER);
+        
+        // Add a search icon button
+        JButton searchButton = new JButton(new ImageIcon("src/main/resources/search_icon.png"));
+        if (!searchButton.getIcon().toString().contains("ImageIcon")) {
+            searchButton.setText("🔍");
+        }
+        searchButton.setBorderPainted(false);
+        searchButton.setContentAreaFilled(false);
+        searchButton.addActionListener(e -> timKiem());
+        searchPanel.add(searchButton, BorderLayout.EAST);
+        
         topPanel.add(btnAdd, BorderLayout.WEST);
-        topPanel.add(searchField, BorderLayout.EAST);
+        topPanel.add(searchPanel, BorderLayout.EAST);
         mainContentPanel.add(topPanel, BorderLayout.NORTH);
 
         // ============ Table Panel ============
@@ -70,59 +94,92 @@ public class NhanVienForm extends JFrame {
                 "ID", "Họ Và Tên", "SĐT", "Giới Tính", "Ngày Sinh", "Địa Chỉ", "Số HĐ", "Doanh Thu Tháng"
         };
         model = new DefaultTableModel(columnNames, 0);
-        table = new JTable(model);
+        table = new JTable(model) {
+            @Override
+            public Component prepareRenderer(javax.swing.table.TableCellRenderer renderer, int row, int column) {
+                Component comp = super.prepareRenderer(renderer, row, column);
+                if (row % 2 == 1) {
+                    comp.setBackground(new Color(240, 240, 240));
+                } else {
+                    comp.setBackground(Color.WHITE);
+                }
+                if (isCellSelected(row, column)) {
+                    comp.setBackground(new Color(204, 204, 255));
+                }
+                return comp;
+            }
+        };
+        
         table.setFillsViewportHeight(true);
-        table.setRowHeight(25);
+        table.setRowHeight(35);
         table.setFont(new Font("Arial", Font.PLAIN, 13));
         table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 13));
+        table.getTableHeader().setBackground(new Color(0, 204, 204));
+        table.getTableHeader().setForeground(Color.WHITE);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setShowGrid(true);
+        table.setGridColor(new Color(230, 230, 230));
+        
         table.getSelectionModel().addListSelectionListener(e -> {
             int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
                 MapNhanVienToForm(selectedRow);
             }
         });
+        
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
         mainContentPanel.add(scrollPane, BorderLayout.CENTER);
 
+        // ============ Bottom Form Panel ============
+        JPanel bottomPanel = new JPanel(new BorderLayout(10, 10));
+        bottomPanel.setBackground(Color.WHITE);
+        bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        
         // ============ Input Form Panel ============
-        JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10)); // Thay đổi số hàng và cột để có đủ chỗ cho tất cả các trường
-        formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        txtHoTen = new JTextField();
-        txtSdt = new JTextField();
-        txtDiaChi = new JTextField();
+        JPanel formPanel = new JPanel(new GridLayout(1, 5, 10, 0));
+        formPanel.setBackground(Color.WHITE);
+        
+        txtHoTen = createStyledTextField();
+        txtSdt = createStyledTextField();
+        txtDiaChi = createStyledTextField();
+        txtDiaChi.setHorizontalAlignment(JTextField.LEFT);
         cbGioiTinh = new JComboBox<>(new String[]{"Nam", "Nữ"});
+        cbGioiTinh.setBackground(Color.WHITE);
+        cbGioiTinh.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        txtNgaySinh = new JTextField();
+        txtNgaySinh = createStyledTextField();
         txtNgaySinh.setToolTipText("dd/MM/yyyy");
-        txtNgaySinh.setText("");
-
-        // Sử dụng GridLayout với 6 hàng, 2 cột
+        
+        // Add calendar icon to the date field
+        JPanel ngaySinhPanel = new JPanel(new BorderLayout());
+        ngaySinhPanel.setBackground(Color.WHITE);
+        ngaySinhPanel.add(createLabeledField("Ngày sinh", txtNgaySinh), BorderLayout.CENTER);
+        JButton calendarButton = new JButton("📅");
+        calendarButton.setBorderPainted(false);
+        calendarButton.setContentAreaFilled(false);
+        calendarButton.setFocusPainted(false);
+        calendarButton.addActionListener(e -> showDatePicker());
+        ngaySinhPanel.add(calendarButton, BorderLayout.EAST);
+        
         formPanel.add(createLabeledField("Họ và tên nhân viên", txtHoTen));
         formPanel.add(createLabeledField("Số điện thoại", txtSdt));
         formPanel.add(createLabeledField("Giới tính", cbGioiTinh));
-        formPanel.add(createLabeledField("Ngày sinh", txtNgaySinh));
+        formPanel.add(ngaySinhPanel);
         formPanel.add(createLabeledField("Địa chỉ", txtDiaChi));
-        mainContentPanel.add(formPanel, BorderLayout.WEST);  // Đưa formPanel vào BorderLayout.WEST để nó hiển thị rõ hơn
 
         // ============ Button Panel ============
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        buttonPanel.setBackground(Color.WHITE);
         String[] btnLabels = {"Thêm", "Làm Mới", "Cập Nhật", "Mật Khẩu", "Xóa", "Hủy"};
-
+        
         for (String label : btnLabels) {
-            JButton btn = new JButton(label);
-            btn.setPreferredSize(new Dimension(100, 35));
-            btn.setBackground(new Color(147, 112, 219));
-            btn.setForeground(Color.WHITE);
-            btn.setFocusPainted(false);
+            JButton btn = createStyledButton(label);
             buttonPanel.add(btn);
 
-            // Gắn sự kiện cho nút "Thêm"
             if (label.equals("Thêm")) {
                 btn.addActionListener(e -> themNhanVien());
-            }
-            // Gắn sự kiện cho nút "Xóa"
-            else if (label.equals("Xóa")) {
+            } else if (label.equals("Xóa")) {
                 btn.addActionListener(e -> xoaNhanVien());
             } else if (label.equals("Làm Mới")) {
                 btn.addActionListener(e -> lamMoi());
@@ -133,10 +190,11 @@ public class NhanVienForm extends JFrame {
             } else if (label.equals("Hủy")) {
                 btn.addActionListener(e -> ClearForm());
             }
-
         }
-
-        mainContentPanel.add(buttonPanel, BorderLayout.PAGE_END);
+        
+        bottomPanel.add(formPanel, BorderLayout.CENTER);
+        bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
+        mainContentPanel.add(bottomPanel, BorderLayout.SOUTH);
         
         if (!isEmbedded) {
             setContentPane(mainContentPanel);
@@ -147,17 +205,50 @@ public class NhanVienForm extends JFrame {
         loadNhanVienData();
     }
     
+    private JTextField createStyledTextField() {
+        JTextField textField = new JTextField();
+        textField.setFont(new Font("Arial", Font.PLAIN, 14));
+        textField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+        return textField;
+    }
+    
+    private JButton createStyledButton(String text) {
+        JButton button = new JButton(text);
+        button.setPreferredSize(new Dimension(100, 35));
+        button.setBackground(new Color(112, 76, 240));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setFont(new Font("Arial", Font.BOLD, 12));
+        return button;
+    }
+    
+    private void showDatePicker() {
+        // Placeholder for date picker functionality
+        // In a real implementation, we would show a date picker dialog here
+        String date = JOptionPane.showInputDialog(this, "Nhập ngày (dd/MM/yyyy):", txtNgaySinh.getText());
+        if (date != null && !date.isEmpty()) {
+            txtNgaySinh.setText(date);
+        }
+    }
+    
     public Container getContent() {
         return mainContentPanel;
     }
 
     private JPanel createLabeledField(String label, JComponent field) {
         JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.setBackground(Color.WHITE);
         JLabel lbl = new JLabel(label);
+        lbl.setForeground(new Color(100, 100, 100));
+        lbl.setFont(new Font("Arial", Font.PLAIN, 12));
         panel.add(lbl, BorderLayout.NORTH);
         panel.add(field, BorderLayout.CENTER);
         return panel;
     }
+    
     private void MapNhanVienToForm(int row) {
         String maNV = model.getValueAt(row, 0).toString();
         String hoTen = model.getValueAt(row, 1).toString();
@@ -170,8 +261,10 @@ public class NhanVienForm extends JFrame {
         txtSdt.setText(sdt);
         cbGioiTinh.setSelectedItem(gioiTinh);
         txtDiaChi.setText(diaChi);
+        txtDiaChi.setHorizontalAlignment(JTextField.LEFT);
         txtNgaySinh.setText(ngaySinhStr);
     }
+    
     private void loadNhanVienData() {
         List<NhanVien> ds = controller.layDanhSachNhanVien();
 
@@ -190,6 +283,8 @@ public class NhanVienForm extends JFrame {
             });
         }
     }
+    
+    // Keep all the business logic unchanged
     private void xoaNhanVien() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
@@ -201,6 +296,7 @@ public class NhanVienForm extends JFrame {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên để xóa!");
         }
     }
+    
     private void suaNhanVien() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
@@ -234,6 +330,7 @@ public class NhanVienForm extends JFrame {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên để sửa!");
         }
     }
+    
     private void doiMatKhau() {
         String sdt = txtSdt.getText().trim();
         String matKhauMoi = JOptionPane.showInputDialog(this, "Nhập mật khẩu mới:");
@@ -244,10 +341,12 @@ public class NhanVienForm extends JFrame {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu mới!");
         }
     }
+    
     private void lamMoi() {
         loadNhanVienData(); // mặc định hôm nay
         ClearForm();
     }
+    
     private void ClearForm() {
         txtHoTen.setText("");
         txtSdt.setText("");
@@ -255,6 +354,7 @@ public class NhanVienForm extends JFrame {
         cbGioiTinh.setSelectedIndex(0);
         txtNgaySinh.setText(new SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date())); // mặc định hôm nay
     }
+    
     private void timKiem() {
         String tuKhoa = JOptionPane.showInputDialog(this, "Nhập từ khóa tìm kiếm:");
         if (tuKhoa != null && !tuKhoa.trim().isEmpty()) {
@@ -277,7 +377,6 @@ public class NhanVienForm extends JFrame {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập từ khóa tìm kiếm!");
         }
     }
-
 
     private void themNhanVien() {
         try {
